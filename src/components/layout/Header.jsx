@@ -111,9 +111,13 @@ export const Header = () => {
               <CreditCard className="w-3 h-3 text-amber-500" />
               <span>{t('buyInInstallment')} 0-0-24</span>
             </Link>
-            <Link to="/admin" className="text-amber-600 dark:text-amber-400 font-bold hover:underline flex items-center gap-1">
-              <ShieldCheck className="w-3.5 h-3.5" />
-              <span>{t('adminPanel')}</span>
+            <Link
+              to="/admin"
+              className="px-2.5 py-1 bg-gradient-to-r from-amber-400 to-yellow-400 hover:from-amber-300 hover:to-yellow-300 text-black font-black rounded-lg text-[11px] shadow-sm flex items-center gap-1.5 transition-all hover:scale-105 active:scale-95"
+            >
+              <ShieldCheck className="w-3.5 h-3.5 stroke-[2.5]" />
+              <span>Admin Panel</span>
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-ping" />
             </Link>
           </div>
 

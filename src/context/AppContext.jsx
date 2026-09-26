@@ -139,6 +139,20 @@ export const AppProvider = ({ children }) => {
     showToast(lang === 'uz' ? "Mahsulotdan nusxa olindi!" : "Создана копия товара!", 'success');
   };
 
+  const bulkDeleteProducts = (ids) => {
+    if (!ids || ids.length === 0) return;
+    setProducts(prev => prev.filter(p => !ids.includes(p.id)));
+    setCart(prev => prev.filter(item => !ids.includes(item.id)));
+    setFavorites(prev => prev.filter(fId => !ids.includes(fId)));
+    showToast(lang === 'uz' ? `${ids.length} ta mahsulot o'chirildi!` : `${ids.length} товаров удалено!`, 'info');
+  };
+
+  const bulkToggleStock = (ids, inStock) => {
+    if (!ids || ids.length === 0) return;
+    setProducts(prev => prev.map(p => ids.includes(p.id) ? { ...p, inStock } : p));
+    showToast(lang === 'uz' ? `${ids.length} ta mahsulot holati yangilandi!` : `${ids.length} товаров обновлено!`, 'success');
+  };
+
   // 4. Cart State
   const [cart, setCart] = useState(() => {
     const saved = localStorage.getItem('texnomart_cart');
@@ -183,22 +197,69 @@ export const AppProvider = ({ children }) => {
   const cartSubtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
-  // 5. Promo Code System
-  const [promoCode, setPromoCode] = useState(null); // { code: 'TEXNO2026', discountPercent: 10, discountFixed: 0 }
-  
-  const validPromoCodes = {
-    'TEXNO2026': { type: 'percent', value: 10 },
-    'TEXNOMART': { type: 'percent', value: 15 },
-    'YANGI': { type: 'fixed', value: 100000 },
-    'SUPER': { type: 'percent', value: 20 },
+  // 5. Promo Code System (Dynamic List + Application)
+  const defaultPromoCodes = [
+    { id: 1, code: 'TEXNO2026', type: 'percent', value: 10, desc: "Barcha tovarlar uchun 10% chegirma", minOrder: 0, active: true },
+    { id: 2, code: 'TEXNOMART', type: 'percent', value: 15, desc: "Maxsus aksiyali 15% chegirma", minOrder: 500000, active: true },
+    { id: 3, code: 'YANGI', type: 'fixed', value: 100000, desc: "Birinchi xarid uchun 100 000 so'm chegirma", minOrder: 1000000, active: true },
+    { id: 4, code: 'SUPER', type: 'percent', value: 20, desc: "VIP mijozlar uchun 20% maxsus chegirma", minOrder: 5000000, active: true },
+    { id: 5, code: 'BAHOR', type: 'fixed', value: 50000, desc: "Mavsumiy 50 000 so'm chegirma", minOrder: 300000, active: true },
+  ];
+
+  const [promoCodes, setPromoCodes] = useState(() => {
+    const saved = localStorage.getItem('texnomart_promos');
+    if (saved) {
+      try { return JSON.parse(saved); } catch {}
+    }
+    return defaultPromoCodes;
+  });
+
+  useEffect(() => {
+    localStorage.setItem('texnomart_promos', JSON.stringify(promoCodes));
+  }, [promoCodes]);
+
+  const addPromoCode = (newPromo) => {
+    const item = {
+      ...newPromo,
+      id: Date.now(),
+      code: newPromo.code.trim().toUpperCase(),
+      active: true,
+      minOrder: Number(newPromo.minOrder) || 0,
+      value: Number(newPromo.value) || 0,
+    };
+    setPromoCodes(prev => [item, ...prev]);
+    showToast("Yangi promokod yaratildi!", 'success');
   };
+
+  const updatePromoCode = (id, fields) => {
+    setPromoCodes(prev => prev.map(p => p.id === id ? { ...p, ...fields } : p));
+    showToast("Promokod yangilandi!", 'success');
+  };
+
+  const deletePromoCode = (id) => {
+    setPromoCodes(prev => prev.filter(p => p.id !== id));
+    showToast("Promokod o'chirildi!", 'info');
+  };
+
+  const togglePromoCode = (id) => {
+    setPromoCodes(prev => prev.map(p => p.id === id ? { ...p, active: !p.active } : p));
+  };
+
+  const [promoCode, setPromoCode] = useState(null);
 
   const applyPromoCode = (code) => {
     const clean = code.trim().toUpperCase();
-    if (validPromoCodes[clean]) {
+    const found = promoCodes.find(p => p.code === clean && p.active);
+    if (found) {
+      if (found.minOrder && cartSubtotal < found.minOrder) {
+        showToast(lang === 'uz' ? `Promokod uchun minimal xarid: ${new Intl.NumberFormat('ru-RU').format(found.minOrder)} so'm` : `Мин. заказ: ${new Intl.NumberFormat('ru-RU').format(found.minOrder)} сум`, 'error');
+        return false;
+      }
       setPromoCode({
         code: clean,
-        ...validPromoCodes[clean],
+        type: found.type,
+        value: found.value,
+        desc: found.desc
       });
       showToast(t('promoApplied'), 'success');
       return true;
@@ -217,6 +278,106 @@ export const AppProvider = ({ children }) => {
     : 0;
 
   const cartTotal = Math.max(0, cartSubtotal - discountAmount);
+
+  // 5.1 Hero Banners Management
+  const defaultBanners = [
+    {
+      id: 1,
+      titleUz: "iPhone 16 Pro Max",
+      subtitleUz: "0% Boshlang'ich to'lov bilan 24 oyga muddatli to'lov!",
+      titleRu: "iPhone 16 Pro Max",
+      subtitleRu: "Рассрочка на 24 месяца без первого взноса!",
+      titleEn: "iPhone 16 Pro Max",
+      subtitleEn: "0% Down payment with 24 months installment plan!",
+      badge: "YILNING ENG KUCHLI SMARTFONI",
+      link: "/product/1",
+      bgGradient: "from-amber-400 via-amber-500 to-yellow-500 text-black",
+      image: "https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=800&auto=format&fit=crop&q=80",
+      monthly: "729 000",
+      active: true
+    },
+    {
+      id: 2,
+      titleUz: "Samsung Galaxy S24 Ultra",
+      subtitleUz: "Galaxy AI sun'iy intellekti va 200MP aql bovar qilmas kamera",
+      titleRu: "Samsung Galaxy S24 Ultra",
+      subtitleRu: "Искусственный интеллект Galaxy AI и камера 200МП",
+      titleEn: "Samsung Galaxy S24 Ultra",
+      subtitleEn: "Galaxy AI experience with 200MP flagship camera",
+      badge: "GALAXY AI FLIP",
+      link: "/product/2",
+      bgGradient: "from-zinc-950 via-slate-900 to-neutral-900 text-white",
+      image: "https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=800&auto=format&fit=crop&q=80",
+      monthly: "662 000",
+      active: true
+    },
+    {
+      id: 3,
+      titleUz: "MacBook Air 13\" M3",
+      subtitleUz: "18 soatgacha batareya quvvati va Liquid Retina displey",
+      titleRu: "MacBook Air 13\" M3",
+      subtitleRu: "До 18 часов работы без подзарядки на чипе M3",
+      titleEn: "MacBook Air 13\" M3",
+      subtitleEn: "Up to 18 hours battery life on Apple M3 chip",
+      badge: "PROFESSIONAL",
+      link: "/product/3",
+      bgGradient: "from-blue-600 via-indigo-600 to-slate-900 text-white",
+      image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=800&auto=format&fit=crop&q=80",
+      monthly: "583 000",
+      active: true
+    }
+  ];
+
+  const [banners, setBanners] = useState(() => {
+    const saved = localStorage.getItem('texnomart_banners');
+    if (saved) {
+      try { return JSON.parse(saved); } catch {}
+    }
+    return defaultBanners;
+  });
+
+  useEffect(() => {
+    localStorage.setItem('texnomart_banners', JSON.stringify(banners));
+  }, [banners]);
+
+  const addBanner = (bannerData) => {
+    const newBanner = {
+      ...bannerData,
+      id: Date.now(),
+      active: true
+    };
+    setBanners(prev => [newBanner, ...prev]);
+    showToast("Yangi banner qo'shildi!", 'success');
+  };
+
+  const updateBanner = (id, fields) => {
+    setBanners(prev => prev.map(b => b.id === id ? { ...b, ...fields } : b));
+    showToast("Banner yangilandi!", 'success');
+  };
+
+  const deleteBanner = (id) => {
+    setBanners(prev => prev.filter(b => b.id !== id));
+    showToast("Banner o'chirildi!", 'info');
+  };
+
+  const toggleBanner = (id) => {
+    setBanners(prev => prev.map(b => b.id === id ? { ...b, active: !b.active } : b));
+  };
+
+  // 5.2 Admin Notification System
+  const [adminNotifications, setAdminNotifications] = useState([
+    { id: 1, title: "Yangi buyurtma #78922", desc: "Malika Karimova - Apple Watch Series 10", time: "10 daqiqa oldin", type: "order", read: false },
+    { id: 2, title: "Telegram bot faol", desc: "@orifxojabot buyurtmalarni qabul qilishga tayyor", time: "1 soat oldin", type: "system", read: false },
+    { id: 3, title: "Ombor ogohlantirishi", desc: "Dyson Supersonic zaxirasi kam qoldi", time: "Bugun", type: "warning", read: false }
+  ]);
+
+  const dismissNotification = (id) => {
+    setAdminNotifications(prev => prev.filter(n => n.id !== id));
+  };
+
+  const clearNotifications = () => {
+    setAdminNotifications([]);
+  };
 
   // 6. Favorites State (Wishlist)
   const [favorites, setFavorites] = useState(() => {
@@ -476,6 +637,21 @@ export const AppProvider = ({ children }) => {
         applyPromoCode,
         removePromoCode,
         discountAmount,
+        bulkDeleteProducts,
+        bulkToggleStock,
+        promoCodes,
+        addPromoCode,
+        updatePromoCode,
+        deletePromoCode,
+        togglePromoCode,
+        banners,
+        addBanner,
+        updateBanner,
+        deleteBanner,
+        toggleBanner,
+        adminNotifications,
+        dismissNotification,
+        clearNotifications,
         favorites,
         toggleFavorite,
         isFavorite,

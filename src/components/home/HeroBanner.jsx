@@ -60,8 +60,12 @@ const slides = [
 ];
 
 export const HeroBanner = () => {
-  const { lang, t, products } = useApp();
+  const { lang, t, products, banners } = useApp();
   const [current, setCurrent] = useState(0);
+
+  // Active slides from dynamic banners state or fallback
+  const activeBanners = (banners && banners.length > 0) ? banners.filter(b => b.active) : [];
+  const currentSlides = activeBanners.length > 0 ? activeBanners : slides;
 
   // Countdown timer for Flash Deal side card
   const [timeLeft, setTimeLeft] = useState({ hours: 7, minutes: 28, seconds: 45 });
@@ -79,15 +83,17 @@ export const HeroBanner = () => {
   }, []);
 
   useEffect(() => {
+    if (currentSlides.length === 0) return;
     const slideTimer = setInterval(() => {
-      setCurrent(prev => (prev + 1) % slides.length);
+      setCurrent(prev => (prev + 1) % currentSlides.length);
     }, 5500);
     return () => clearInterval(slideTimer);
-  }, []);
+  }, [currentSlides.length]);
 
-  const slide = slides[current];
-  const title = lang === 'ru' ? slide.titleRu : lang === 'en' ? slide.titleEn : slide.titleUz;
-  const subtitle = lang === 'ru' ? slide.subtitleRu : lang === 'en' ? slide.subtitleEn : slide.subtitleUz;
+  const safeIndex = currentSlides.length > 0 ? current % currentSlides.length : 0;
+  const slide = currentSlides[safeIndex] || slides[0];
+  const title = lang === 'ru' ? (slide.titleRu || slide.titleUz) : lang === 'en' ? (slide.titleEn || slide.titleUz) : slide.titleUz;
+  const subtitle = lang === 'ru' ? (slide.subtitleRu || slide.subtitleUz) : lang === 'en' ? (slide.subtitleEn || slide.subtitleUz) : slide.subtitleUz;
 
   // Find flash deal product (Dyson or deal of day)
   const flashProduct = products.find(p => p.id === 15) || products[0];
@@ -154,7 +160,7 @@ export const HeroBanner = () => {
 
         {/* Carousel Controls */}
         <button
-          onClick={() => setCurrent(prev => (prev - 1 + slides.length) % slides.length)}
+          onClick={() => setCurrent(prev => (prev - 1 + currentSlides.length) % currentSlides.length)}
           className="absolute left-3 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/40 hover:bg-white/80 dark:bg-black/40 dark:hover:bg-black/80 backdrop-blur-md transition-all text-black dark:text-white"
           aria-label="Previous"
         >
@@ -162,7 +168,7 @@ export const HeroBanner = () => {
         </button>
 
         <button
-          onClick={() => setCurrent(prev => (prev + 1) % slides.length)}
+          onClick={() => setCurrent(prev => (prev + 1) % currentSlides.length)}
           className="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/40 hover:bg-white/80 dark:bg-black/40 dark:hover:bg-black/80 backdrop-blur-md transition-all text-black dark:text-white"
           aria-label="Next"
         >
@@ -171,7 +177,7 @@ export const HeroBanner = () => {
 
         {/* Indicators */}
         <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-20">
-          {slides.map((_, idx) => (
+          {currentSlides.map((_, idx) => (
             <button
               key={idx}
               onClick={() => setCurrent(idx)}
