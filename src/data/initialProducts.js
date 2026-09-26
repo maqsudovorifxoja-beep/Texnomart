@@ -1006,5 +1006,411 @@ export const initialProducts = [
       "Boshqaruv": "Mi Home va ovozli boshqaruv"
     },
     description: "Shahar changi, allergenlar va yoqimsiz hidlardan xalos etuvchi yuqori unumdor havo tozalagich."
+  },
+  {
+    id: 36,
+    title: {
+      uz: "O'yin konsoli Sony PlayStation 5 Pro 2TB Digital Edition",
+      ru: "Игровая приставка Sony PlayStation 5 Pro 2TB",
+      en: "Sony PlayStation 5 Pro 2TB Gaming Console"
+    },
+    category: "accessories",
+    brand: "Sony",
+    price: 11990000,
+    oldPrice: 13500000,
+    rating: 5.0,
+    reviewsCount: 64,
+    inStock: true,
+    isDealOfTheDay: true,
+    isHit: true,
+    isNew: true,
+    image: "https://images.unsplash.com/photo-1606813907291-d86efa9b94db?w=600&auto=format&fit=crop&q=80",
+    images: ["https://images.unsplash.com/photo-1606813907291-d86efa9b94db?w=600&auto=format&fit=crop&q=80"],
+    specs: {
+      "Xotira": "2 TB SSD o'ta tezkor xotira",
+      "Grafika": "Kengaytirilgan Ray Tracing va AI PlayStation Spectral Super Resolution (PSSR)",
+      "Unumdorlik": "4K 60FPS va 120FPS qo'llab-quvvatlash",
+      "Kafolat": "1 yil rasmiy servis kafolati"
+    },
+    description: "PlayStation 5 Pro — 2TB xotirali, ilg'or AI grafikali eng kuchli o'yin konsoli."
+  },
+  {
+    id: 37,
+    title: {
+      uz: "Planshet Apple iPad Pro 13\" M4 256GB Wi-Fi Space Black",
+      ru: "Планшет Apple iPad Pro 13\" M4 256GB Space Black",
+      en: "Apple iPad Pro 13\" M4 256GB Wi-Fi Space Black"
+    },
+    category: "tablets",
+    brand: "Apple",
+    price: 16999000,
+    oldPrice: 18499000,
+    rating: 4.9,
+    reviewsCount: 42,
+    inStock: true,
+    isDealOfTheDay: false,
+    isHit: true,
+    isNew: true,
+    image: "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=600&auto=format&fit=crop&q=80",
+    images: ["https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=600&auto=format&fit=crop&q=80"],
+    specs: {
+      "Ekran": "13.0\" Ultra Retina XDR Tandem OLED, 120Hz",
+      "Protsessor": "Apple M4 chip (9-core CPU, 10-core GPU)",
+      "Qalinligi": "Atigi 5.1 mm (Eng yupqa Apple qurilmasi)",
+      "Xotira": "256 GB"
+    },
+    description: "Tandem OLED ekrani va inqilobiy Apple M4 chipi bilan jihozlangan dunyodagi eng ilg'or professional planshet."
+  },
+  {
+    id: 38,
+    title: {
+      uz: "Aqlli soat Apple Watch Ultra 2 49mm Titanium Black Ocean Band",
+      ru: "Смарт-часы Apple Watch Ultra 2 49mm Titanium Black",
+      en: "Apple Watch Ultra 2 49mm Titanium Black"
+    },
+    category: "accessories",
+    brand: "Apple",
+    price: 9890000,
+    oldPrice: 10990000,
+    rating: 4.9,
+    reviewsCount: 57,
+    inStock: true,
+    isDealOfTheDay: false,
+    isHit: true,
+    isNew: true,
+    image: "https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?w=600&auto=format&fit=crop&q=80",
+    images: ["https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?w=600&auto=format&fit=crop&q=80"],
+    specs: {
+      "Korpus": "49 mm aerokosmik qora titan",
+      "Ekran yorqinligi": "3000 nit quyosh ostida aniq ko'rinuvchi",
+      "Suvga chidamlilik": "100 metr (Sho'ng'ish va sport uchun)",
+      "Batareya": "Odatdagi rejimda 36 soat, tejamkor rejimda 72 soat"
+    },
+    description: "Ekstremal sharoitlar va sport ixlosmandlari uchun yaratilgan titan korpusli titan soat."
+  },
+  {
+    id: 39,
+    title: {
+      uz: "Soch steyleri Dyson Airwrap Multi-styler Complete Long Strawberry Bronze",
+      ru: "Мультистайлер Dyson Airwrap Complete Long Strawberry Bronze",
+      en: "Dyson Airwrap Multi-styler Complete Long"
+    },
+    category: "accessories",
+    brand: "Dyson",
+    price: 7490000,
+    oldPrice: 8300000,
+    rating: 5.0,
+    reviewsCount: 198,
+    inStock: true,
+    isDealOfTheDay: true,
+    isHit: true,
+    isNew: false,
+    image: "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=600&auto=format&fit=crop&q=80",
+    images: ["https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=600&auto=format&fit=crop&q=80"],
+    specs: {
+      "Texnologiya": "Koanda aerodinamik effekti (ortiqcha issiqliksiz)",
+      "Quvvat": "1300 Vt, Dyson V9 raqamli dvigatel",
+      "To'plam": "6 xil turli nasadkalar va teridan hashamatli chexol",
+      "Kafolat": "2 yil rasmiy kafolat"
+    },
+    description: "Sochni ortiqcha qizdirmasdan havoning o'zi bilan jingalak qiluvchi va turmaklovchi afsonaviy steyler."
+  },
+  {
+    id: 40,
+    title: {
+      uz: "Akustik kolonka Marshall Stanmore III Bluetooth Black",
+      ru: "Акустическая колонка Marshall Stanmore III Black",
+      en: "Marshall Stanmore III Bluetooth Speaker Black"
+    },
+    category: "accessories",
+    brand: "Marshall",
+    price: 4690000,
+    oldPrice: 5200000,
+    rating: 4.8,
+    reviewsCount: 39,
+    inStock: true,
+    isDealOfTheDay: false,
+    isHit: true,
+    isNew: false,
+    image: "https://images.unsplash.com/photo-1545454675-3531b543be5d?w=600&auto=format&fit=crop&q=80",
+    images: ["https://images.unsplash.com/photo-1545454675-3531b543be5d?w=600&auto=format&fit=crop&q=80"],
+    specs: {
+      "Tovush kuchi": "80 Vt boy va chuqur stereo bas",
+      "Ulanish": "Bluetooth 5.2, 3.5mm AUX, RCA",
+      "Dizayn": "Klassik retro vinil va latun detallar",
+      "Boshqaruv": "Marshall Bluetooth ilovasi va analog regulyatorlar"
+    },
+    description: "Xonani to'ldiruvchi kristaldek tiniq rok tovushi va klassik Marshall retro dizayni."
+  },
+  {
+    id: 41,
+    title: {
+      uz: "O'yin noutbuki Asus ROG Strix G16 i9-14900HX / RTX 4070 / 32GB",
+      ru: "Игровой ноутбук Asus ROG Strix G16 i9 / RTX 4070",
+      en: "Asus ROG Strix G16 Gaming Laptop i9 / RTX 4070"
+    },
+    category: "laptops",
+    brand: "Asus",
+    price: 24500000,
+    oldPrice: 26900000,
+    rating: 4.9,
+    reviewsCount: 31,
+    inStock: true,
+    isDealOfTheDay: false,
+    isHit: true,
+    isNew: true,
+    image: "https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=600&auto=format&fit=crop&q=80",
+    images: ["https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=600&auto=format&fit=crop&q=80"],
+    specs: {
+      "Protsessor": "Intel Core i9-14900HX (24 yadro, 5.8 GHz gacha)",
+      "Videokarta": "NVIDIA GeForce RTX 4070 8GB GDDR6 (140W)",
+      "Ekran": "16.0\" QHD+ (2560x1600), 240Hz, 3ms, ROG Nebula",
+      "Xotira": "32 GB DDR5 + 1 TB PCIe 4.0 NVMe SSD"
+    },
+    description: "Eng so'nggi 14-avlod i9 protsessori va RTX 4070 videokartasi bilan har qanday o'yinda maksimal grafikani ta'minlaydi."
+  },
+  {
+    id: 42,
+    title: {
+      uz: "Elektr grill Tefal OptiGrill Elite XL GC760D30",
+      ru: "Электрогриль Tefal OptiGrill Elite XL GC760D30",
+      en: "Electric Grill Tefal OptiGrill Elite XL"
+    },
+    category: "kitchen",
+    brand: "Tefal",
+    price: 3690000,
+    oldPrice: 4100000,
+    rating: 4.9,
+    reviewsCount: 85,
+    inStock: true,
+    isDealOfTheDay: false,
+    isHit: true,
+    isNew: false,
+    image: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=600&auto=format&fit=crop&q=80",
+    images: ["https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=600&auto=format&fit=crop&q=80"],
+    specs: {
+      "Quvvat": "2200 Vt",
+      "Avtomatik dasturlar": "16 xil dastur (go'sht, baliq, sabzavot, burger va h.k.)",
+      "Datchik": "Go'sht qalinligini o'lchovchi avtomatik aqlli sensor",
+      "Yuzasi": "XL o'lcham — bir vaqtning o'zida 8 kishi uchun"
+    },
+    description: "Go'shtning pishish darajasini (Rare, Medium, Well-done) o'zi aniqlab, mukammal steyk tayyorlovchi aqlli grill."
+  },
+  {
+    id: 43,
+    title: {
+      uz: "Qahva mashinasi DeLonghi Magnifica S ECAM22.110.B",
+      ru: "Кофемашина DeLonghi Magnifica S ECAM22.110.B",
+      en: "DeLonghi Magnifica S Espresso Machine"
+    },
+    category: "kitchen",
+    brand: "DeLonghi",
+    price: 5490000,
+    oldPrice: 6200000,
+    rating: 4.8,
+    reviewsCount: 112,
+    inStock: true,
+    isDealOfTheDay: true,
+    isHit: true,
+    isNew: false,
+    image: "https://images.unsplash.com/photo-1517668808822-9ebb02f2a0e6?w=600&auto=format&fit=crop&q=80",
+    images: ["https://images.unsplash.com/photo-1517668808822-9ebb02f2a0e6?w=600&auto=format&fit=crop&q=80"],
+    specs: {
+      "Bosim": "15 bar italyancha nasos",
+      "Kofe turi": "Donador qahva yoki maydalangan kofe",
+      "Kapuchinator": "Kremdek quyuq sut ko'pigi tayyorlash tizimi",
+      "Suv idishi": "1.8 litr"
+    },
+    description: "Donador qahvani bir lahzada maydalab, haqiqiy italyancha espresso va kapuchino tayyorlovchi avtomat qahva mashinasi."
+  },
+  {
+    id: 44,
+    title: {
+      uz: "Simsiz quloqchin Sony WH-1000XM5 Noise Canceling Black",
+      ru: "Беспроводные наушники Sony WH-1000XM5 Black",
+      en: "Sony WH-1000XM5 Noise Canceling Headphones"
+    },
+    category: "accessories",
+    brand: "Sony",
+    price: 4390000,
+    oldPrice: 4890000,
+    rating: 4.9,
+    reviewsCount: 147,
+    inStock: true,
+    isDealOfTheDay: false,
+    isHit: true,
+    isNew: false,
+    image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&auto=format&fit=crop&q=80",
+    images: ["https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&auto=format&fit=crop&q=80"],
+    specs: {
+      "Shovqinni bostirish": "Sanoatdagi eng ilg'or Dual Processor V1 va QN1 chipi",
+      "Batareya": "30 soatgacha to'xtovsiz musiqa tinglash",
+      "Kodeklar": "LDAC, Hi-Res Audio Wireless, DSEE Extreme",
+      "Mikrofon": "8 ta mikrofon bilan tiniq ovoz uzatish"
+    },
+    description: "Dunyodagi eng yaxshi faol shovqin to'suvchi tizimga ega premium quloqchin."
+  },
+  {
+    id: 45,
+    title: {
+      uz: "Ekshen-kamera GoPro HERO 13 Black 5.3K 60fps",
+      ru: "Экшн-камера GoPro HERO 13 Black",
+      en: "Action Camera GoPro HERO 13 Black 5.3K"
+    },
+    category: "accessories",
+    brand: "GoPro",
+    price: 5290000,
+    oldPrice: 5890000,
+    rating: 4.9,
+    reviewsCount: 28,
+    inStock: true,
+    isDealOfTheDay: false,
+    isHit: false,
+    isNew: true,
+    image: "https://images.unsplash.com/photo-1565849904461-04a58ad377e0?w=600&auto=format&fit=crop&q=80",
+    images: ["https://images.unsplash.com/photo-1565849904461-04a58ad377e0?w=600&auto=format&fit=crop&q=80"],
+    specs: {
+      "Video": "5.3K 60fps, 4K 120fps, 2.7K 240fps (8x slow-mo)",
+      "Stabilizatsiya": "HyperSmooth 6.0 mukammal gorizont tekislagich",
+      "Suvga chidamlilik": "Qo'shimcha g'ilofsiz 10 metrgacha suv osti",
+      "Batareya": "1900 mAh Enduro sovuqqa chidamli akkumulyator"
+    },
+    description: "Har qanday sarguzasht, sayohat va ekstremal harakatlarni kinoteatr darajasida suratga oluvchi flagman kamera."
+  },
+  {
+    id: 46,
+    title: {
+      uz: "Robot changyutgich Roborock S8 Pro Ultra Oq",
+      ru: "Робот-пылесос Roborock S8 Pro Ultra White",
+      en: "Robot Vacuum Roborock S8 Pro Ultra"
+    },
+    category: "vacuums",
+    brand: "Xiaomi",
+    price: 13990000,
+    oldPrice: 15500000,
+    rating: 5.0,
+    reviewsCount: 93,
+    inStock: true,
+    isDealOfTheDay: true,
+    isHit: true,
+    isNew: true,
+    image: "https://images.unsplash.com/photo-1518640467707-6811f4a6ab73?w=600&auto=format&fit=crop&q=80",
+    images: ["https://images.unsplash.com/photo-1518640467707-6811f4a6ab73?w=600&auto=format&fit=crop&q=80"],
+    specs: {
+      "Tortish kuchi": "6000 Pa HyperForce o'ta kuchli so'rish",
+      "Avtomat stansiya": "Changni bo'shatish, lattani issiq suvda yuvish va issiq havoda quritish",
+      "Navigatsiya": "PreciSense LiDAR va 3D to'siqlarni aylanib o'tish datchigi",
+      "Tozalash maydoni": "300 kv.m gacha bir quvvatlanishda"
+    },
+    description: "Changni avtomatik tozalovchi, latta yuvuvchi va qurituvchi dunyodagi eng mukammal robot changyutgich."
+  },
+  {
+    id: 47,
+    title: {
+      uz: "Fotosessiya kamerasi Canon EOS R6 Mark II Body",
+      ru: "Фотоаппарат Canon EOS R6 Mark II Body",
+      en: "Mirrorless Camera Canon EOS R6 Mark II Body"
+    },
+    category: "accessories",
+    brand: "Canon",
+    price: 28900000,
+    oldPrice: 31500000,
+    rating: 5.0,
+    reviewsCount: 19,
+    inStock: true,
+    isDealOfTheDay: false,
+    isHit: true,
+    isNew: true,
+    image: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=600&auto=format&fit=crop&q=80",
+    images: ["https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=600&auto=format&fit=crop&q=80"],
+    specs: {
+      "Matritsa": "24.2 MP to'liq kadrli (Full-Frame) CMOS sensor",
+      "Tezkor suratga olish": "Sekundiga 40 ta kadr (elektron zatvor bilan)",
+      "Video": "6K dan oversampling qilingan 4K 60p 10-bit Canon Log 3",
+      "Avtofokus": "Dual Pixel CMOS AF II — ko'z, odam, hayvon va transport vositalarini kuzatish"
+    },
+    description: "Professional fotograflar va videograflar uchun eng mashhur Full-Frame tizimli professional kamera."
+  },
+  {
+    id: 48,
+    title: {
+      uz: "Parti kolonka JBL PartyBox 310 Bluetooth 240W",
+      ru: "Акустическая колонка JBL PartyBox 310",
+      en: "JBL PartyBox 310 Bluetooth Party Speaker"
+    },
+    category: "accessories",
+    brand: "JBL",
+    price: 6890000,
+    oldPrice: 7600000,
+    rating: 4.9,
+    reviewsCount: 165,
+    inStock: true,
+    isDealOfTheDay: false,
+    isHit: true,
+    isNew: false,
+    image: "https://images.unsplash.com/photo-1545454675-3531b543be5d?w=600&auto=format&fit=crop&q=80",
+    images: ["https://images.unsplash.com/photo-1545454675-3531b543be5d?w=600&auto=format&fit=crop&q=80"],
+    specs: {
+      "Quvvat": "240 Vt kuchli JBL Pro Sound va Bass Boost",
+      "Yorug'lik shousi": "Musiqa ritmiga mos dinamik chiroqlar",
+      "Batareya": "18 soat to'xtovsiz ishlash, qulay g'ildiraklar",
+      "Qo'shimcha": "Mikrofon va gitara uchun kirishlar (Karaoke)"
+    },
+    description: "Har qanday bazm va bayramni unutilmas qiluvchi ulkan quvvatli, yorug'lik shouli JBL kolonkasi."
+  },
+  {
+    id: 49,
+    title: {
+      uz: "Muzlatgich LG InstaView Door-in-Door 601L Matt Black",
+      ru: "Холодильник LG InstaView Door-in-Door 601L",
+      en: "Refrigerator LG InstaView Door-in-Door 601L"
+    },
+    category: "refrigerators",
+    brand: "LG",
+    price: 21990000,
+    oldPrice: 24500000,
+    rating: 4.9,
+    reviewsCount: 22,
+    inStock: true,
+    isDealOfTheDay: true,
+    isHit: true,
+    isNew: false,
+    image: "https://images.unsplash.com/photo-1584992236310-6edddc08acff?w=600&auto=format&fit=crop&q=80",
+    images: ["https://images.unsplash.com/photo-1584992236310-6edddc08acff?w=600&auto=format&fit=crop&q=80"],
+    specs: {
+      "Hajmi": "601 litr Side-by-Side ulkan sig'im",
+      "InstaView": "Eshikka 2 marta urilganda ichki chiroq yonadi va oynasi shaffof bo'ladi",
+      "Kompressor": "Inverter Linear Compressor (10 yil rasmiy kafolat)",
+      "Filtr": "Hygiene Fresh+ havoni 99.999% bakteriyalardan tozalash"
+    },
+    description: "InstaView oynali innovatsion eshigi va ulkan sig'imga ega bo'lgan premium LG muzlatgichi."
+  },
+  {
+    id: 50,
+    title: {
+      uz: "Televizor Samsung Neo QLED 8K 75\" QN900D Smart TV",
+      ru: "Телевизор Samsung Neo QLED 8K 75\" QN900D",
+      en: "Samsung Neo QLED 8K 75\" QN900D Smart TV"
+    },
+    category: "tvs",
+    brand: "Samsung",
+    price: 49990000,
+    oldPrice: 56000000,
+    rating: 5.0,
+    reviewsCount: 14,
+    inStock: true,
+    isDealOfTheDay: false,
+    isHit: true,
+    isNew: true,
+    image: "https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=600&auto=format&fit=crop&q=80",
+    images: ["https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=600&auto=format&fit=crop&q=80"],
+    specs: {
+      "Ekran o'lchami": "75 dyuym (190 sm) Cheksiz Infinity Air dizayn",
+      "Rezolyutsiya": "8K Ultra HD (7680x4320)",
+      "Protsessor": "NQ8 AI Gen3 protsessori (512 neyron tarmoq)",
+      "Audio": "90 Vt 6.2.4CH Dolby Atmos va Object Tracking Sound Pro"
+    },
+    description: "512 ta sun'iy intellekt neyron tarmog'i yordamida har qanday tasvirni 8K sifatga ko'taruvchi eng mukammal televizor."
   }
 ];
+

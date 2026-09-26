@@ -18,7 +18,8 @@ import {
   Building,
   Check,
   ChevronRight,
-  MessageCircle
+  MessageCircle,
+  BarChart2
 } from 'lucide-react';
 
 export const ProductDetailPage = () => {
@@ -39,7 +40,7 @@ export const ProductDetailPage = () => {
     isCompared
   } = useApp();
 
-  const product = products.find(p => p.id === Number(id));
+  const product = products.find(p => String(p.id) === String(id));
 
   // Installment month selector: 3, 6, 12, 24 months
   const [selectedMonths, setSelectedMonths] = useState(12);

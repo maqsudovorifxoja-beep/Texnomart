@@ -15,6 +15,10 @@ import { CartPage } from './pages/CartPage';
 import { FavoritesPage } from './pages/FavoritesPage';
 import { ComparePage } from './pages/ComparePage';
 import { StoresPage } from './pages/StoresPage';
+import { DealsPage } from './pages/DealsPage';
+import { AboutPage } from './pages/AboutPage';
+import { DeliveryPage } from './pages/DeliveryPage';
+import { InstallmentPage } from './pages/InstallmentPage';
 import { AdminPage } from './pages/AdminPage';
 import { LoginPage } from './pages/LoginPage';
 import { ProfilePage } from './pages/ProfilePage';
@@ -59,6 +63,10 @@ function AppContent() {
             <Route path="/favorites" element={<FavoritesPage />} />
             <Route path="/compare" element={<ComparePage />} />
             <Route path="/stores" element={<StoresPage />} />
+            <Route path="/deals" element={<DealsPage />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/delivery" element={<DeliveryPage />} />
+            <Route path="/installments" element={<InstallmentPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="*" element={<HomePage />} />

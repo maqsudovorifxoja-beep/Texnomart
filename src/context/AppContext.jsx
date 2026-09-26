@@ -42,7 +42,7 @@ export const AppProvider = ({ children }) => {
 
   // 3. Products State (LocalStorage + Seed with auto-repair)
   const [products, setProducts] = useState(() => {
-    const CURRENT_CATALOG_VERSION = 'v2_fixed_img';
+    const CURRENT_CATALOG_VERSION = 'v3_50_products';
     const savedVersion = localStorage.getItem('texnomart_catalog_version');
     const saved = localStorage.getItem('texnomart_products');
 

@@ -11,7 +11,9 @@ import {
   Check,
   Search as SearchIcon,
   Filter,
-  ArrowUpDown
+  ArrowUpDown,
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-react';
 
 export const CatalogPage = () => {
@@ -34,6 +36,10 @@ export const CatalogPage = () => {
   const [priceRange, setPriceRange] = useState({ min: 0, max: 40000000 });
   const [brandSearchQuery, setBrandSearchQuery] = useState('');
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
+
+  // Pagination State (8 products per page for 6-7 full pages)
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 8;
 
   // Sync params
   useEffect(() => {
@@ -117,6 +123,24 @@ export const CatalogPage = () => {
       return b.reviewsCount - a.reviewsCount;
     });
   }, [products, searchParam, selectedCategory, selectedBrands, hitParam, onlyDiscounts, onlyInStock, priceRange, sortBy, lang]);
+
+  // Reset to page 1 on filter changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedCategory, selectedBrands, onlyDiscounts, onlyInStock, sortBy, priceRange, searchParam, brandSearchQuery]);
+
+  const totalPages = Math.ceil(filteredProducts.length / itemsPerPage) || 1;
+  const paginatedProducts = useMemo(() => {
+    const start = (currentPage - 1) * itemsPerPage;
+    return filteredProducts.slice(start, start + itemsPerPage);
+  }, [filteredProducts, currentPage]);
+
+  const handlePageChange = (newPage) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
@@ -351,13 +375,58 @@ export const CatalogPage = () => {
         </aside>
 
         {/* ================= PRODUCT GRID (9 Cols) ================= */}
-        <main className="lg:col-span-9">
+        <main className="lg:col-span-9 space-y-6">
           {filteredProducts.length > 0 ? (
-            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
-              {filteredProducts.map(product => (
-                <ProductCard key={product.id} product={product} />
-              ))}
-            </div>
+            <>
+              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
+                {paginatedProducts.map(product => (
+                  <ProductCard key={product.id} product={product} />
+                ))}
+              </div>
+
+              {/* Numbered Pagination Bar */}
+              {totalPages > 1 && (
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-gray-100 dark:border-gray-800">
+                  <span className="text-xs text-gray-500 font-semibold">
+                    Jami {filteredProducts.length} tadan {((currentPage - 1) * itemsPerPage) + 1}–{Math.min(currentPage * itemsPerPage, filteredProducts.length)} ko'rsatilmoqda (Sahifa {currentPage} / {totalPages})
+                  </span>
+
+                  <div className="flex items-center gap-1.5 bg-white dark:bg-[#1a1a1a] p-1.5 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm">
+                    <button
+                      onClick={() => handlePageChange(currentPage - 1)}
+                      disabled={currentPage === 1}
+                      className="p-2 rounded-xl text-gray-500 hover:text-black dark:hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                      title="Oldingi sahifa"
+                    >
+                      <ChevronLeft className="w-4 h-4" />
+                    </button>
+
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
+                      <button
+                        key={pageNum}
+                        onClick={() => handlePageChange(pageNum)}
+                        className={`w-9 h-9 rounded-xl text-xs font-black transition-all cursor-pointer ${
+                          currentPage === pageNum
+                            ? 'bg-amber-400 text-black shadow-md shadow-amber-400/20 scale-105'
+                            : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
+                        }`}
+                      >
+                        {pageNum}
+                      </button>
+                    ))}
+
+                    <button
+                      onClick={() => handlePageChange(currentPage + 1)}
+                      disabled={currentPage === totalPages}
+                      className="p-2 rounded-xl text-gray-500 hover:text-black dark:hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                      title="Keyingi sahifa"
+                    >
+                      <ChevronRight className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+              )}
+            </>
           ) : (
             <div className="text-center py-20 bg-white dark:bg-[#1a1a1a] rounded-3xl border border-gray-100 dark:border-gray-800 p-8 space-y-4 shadow-sm">
               <div className="w-16 h-16 rounded-full bg-amber-100 dark:bg-amber-950/60 text-amber-500 flex items-center justify-center mx-auto shadow-inner">

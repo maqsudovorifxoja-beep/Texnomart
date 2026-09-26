@@ -107,7 +107,10 @@ export const Header = () => {
             <Link to="/stores" className="hover:text-amber-500 transition-colors font-medium">
               {t('ourStores')}
             </Link>
-            <Link to="/catalog?deals=true" className="hover:text-amber-500 transition-colors font-medium flex items-center gap-1">
+            <Link to="/deals" className="hover:text-amber-500 transition-colors font-semibold text-amber-600 dark:text-amber-400 flex items-center gap-1">
+              <span>🔥 Aksiyalar</span>
+            </Link>
+            <Link to="/installments" className="hover:text-amber-500 transition-colors font-medium flex items-center gap-1">
               <CreditCard className="w-3 h-3 text-amber-500" />
               <span>{t('buyInInstallment')} 0-0-24</span>
             </Link>

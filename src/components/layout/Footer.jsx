@@ -62,9 +62,9 @@ export const Footer = () => {
           <ul className="space-y-2 text-xs">
             <li><Link to="/stores" className="hover:text-amber-500 transition-colors">{t('ourStores')}</Link></li>
             <li><Link to="/catalog" className="hover:text-amber-500 transition-colors">{t('allCategories')}</Link></li>
-            <li><Link to="/admin" className="text-amber-600 dark:text-amber-400 font-medium hover:underline">{t('adminPanel')}</Link></li>
-            <li><a href="#" className="hover:text-amber-500 transition-colors">{t('aboutUs')}</a></li>
-            <li><a href="#" className="hover:text-amber-500 transition-colors">{t('career')}</a></li>
+            <li><Link to="/about" className="hover:text-amber-500 transition-colors">{t('aboutUs')}</Link></li>
+            <li><Link to="/deals" className="hover:text-amber-500 transition-colors">Aksiyalar va Chegirmalar</Link></li>
+            <li><Link to="/admin" className="text-amber-600 dark:text-amber-400 font-bold hover:underline">{t('adminPanel')}</Link></li>
           </ul>
         </div>
 
@@ -74,11 +74,11 @@ export const Footer = () => {
             {t('buyers')}
           </h4>
           <ul className="space-y-2 text-xs">
-            <li><Link to="/catalog" className="hover:text-amber-500 transition-colors">{t('buyInInstallment')} 0%</Link></li>
+            <li><Link to="/installments" className="hover:text-amber-500 transition-colors">{t('buyInInstallment')} 0%</Link></li>
             <li><Link to="/cart" className="hover:text-amber-500 transition-colors">{t('cart')}</Link></li>
             <li><Link to="/favorites" className="hover:text-amber-500 transition-colors">{t('favorites')}</Link></li>
-            <li><a href="#" className="hover:text-amber-500 transition-colors">{t('deliveryPayment')}</a></li>
-            <li><a href="#" className="hover:text-amber-500 transition-colors">{t('returnPolicy')}</a></li>
+            <li><Link to="/delivery" className="hover:text-amber-500 transition-colors">{t('deliveryPayment')}</Link></li>
+            <li><Link to="/delivery" className="hover:text-amber-500 transition-colors">{t('returnPolicy')}</Link></li>
           </ul>
         </div>
 
