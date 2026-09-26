@@ -31,9 +31,11 @@ export const AppProvider = ({ children }) => {
   useEffect(() => {
     if (isDark) {
       document.documentElement.classList.add('dark');
+      document.body.classList.add('dark');
       localStorage.setItem('texnomart_theme', 'dark');
     } else {
       document.documentElement.classList.remove('dark');
+      document.body.classList.remove('dark');
       localStorage.setItem('texnomart_theme', 'light');
     }
   }, [isDark]);

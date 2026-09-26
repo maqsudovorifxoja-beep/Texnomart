@@ -1,6 +1,8 @@
 @import "tailwindcss";
 @config "../tailwind.config.js";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @layer base {
   body {
     transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
