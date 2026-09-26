@@ -40,17 +40,36 @@ export const AppProvider = ({ children }) => {
 
   const toggleTheme = () => setIsDark(prev => !prev);
 
-  // 3. Products State (LocalStorage + Seed)
+  // 3. Products State (LocalStorage + Seed with auto-repair)
   const [products, setProducts] = useState(() => {
+    const CURRENT_CATALOG_VERSION = 'v2_fixed_img';
+    const savedVersion = localStorage.getItem('texnomart_catalog_version');
     const saved = localStorage.getItem('texnomart_products');
-    if (saved) {
+
+    if (saved && savedVersion === CURRENT_CATALOG_VERSION) {
       try {
         const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length >= initialProducts.length) return parsed;
+        if (Array.isArray(parsed) && parsed.length >= initialProducts.length) {
+          // Double check if any product has the broken URL
+          return parsed.map(p => {
+            if (p.image && p.image.includes('photo-1511707171634-5f897ff02560')) {
+              return { 
+                ...p, 
+                image: "https://images.unsplash.com/photo-1580910051074-3eb694886505?w=600&auto=format&fit=crop&q=80",
+                images: ["https://images.unsplash.com/photo-1580910051074-3eb694886505?w=600&auto=format&fit=crop&q=80"]
+              };
+            }
+            return p;
+          });
+        }
       } catch (e) {
         console.error("Error reading saved products", e);
       }
     }
+
+    // Refresh localStorage with verified initialProducts
+    localStorage.setItem('texnomart_catalog_version', CURRENT_CATALOG_VERSION);
+    localStorage.setItem('texnomart_products', JSON.stringify(initialProducts));
     return initialProducts;
   });
 

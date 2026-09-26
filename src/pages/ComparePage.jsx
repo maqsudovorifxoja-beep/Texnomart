@@ -130,6 +130,10 @@ export const ComparePage = () => {
                       src={product.image}
                       alt={title}
                       className="max-h-full object-contain"
+                      onError={(e) => {
+                        e.currentTarget.onerror = null;
+                        e.currentTarget.src = "https://images.unsplash.com/photo-1580910051074-3eb694886505?w=600&auto=format&fit=crop&q=80";
+                      }}
                     />
                   </div>
 

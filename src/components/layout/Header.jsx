@@ -250,6 +250,10 @@ export const Header = () => {
                           src={item.image}
                           alt={itemTitle}
                           className="w-12 h-12 object-contain rounded-xl bg-gray-50 dark:bg-gray-900 p-1 flex-shrink-0"
+                          onError={(e) => {
+                            e.currentTarget.onerror = null;
+                            e.currentTarget.src = "https://images.unsplash.com/photo-1580910051074-3eb694886505?w=600&auto=format&fit=crop&q=80";
+                          }}
                         />
                         <div className="flex-1 min-w-0">
                           <p className="text-xs sm:text-sm font-semibold text-gray-900 dark:text-gray-100 truncate">

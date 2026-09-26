@@ -104,6 +104,10 @@ export const ProductCard = ({ product }) => {
           alt={title}
           className="w-full h-full object-contain mix-blend-multiply dark:mix-blend-normal group-hover:scale-106 transition-transform duration-500 ease-out"
           loading="lazy"
+          onError={(e) => {
+            e.currentTarget.onerror = null;
+            e.currentTarget.src = "https://images.unsplash.com/photo-1580910051074-3eb694886505?w=600&auto=format&fit=crop&q=80";
+          }}
         />
       </Link>
 

@@ -175,6 +175,10 @@ export const CartPage = () => {
                       src={item.image}
                       alt={itemTitle}
                       className="max-h-full max-w-full object-contain"
+                      onError={(e) => {
+                        e.currentTarget.onerror = null;
+                        e.currentTarget.src = "https://images.unsplash.com/photo-1580910051074-3eb694886505?w=600&auto=format&fit=crop&q=80";
+                      }}
                     />
                   </Link>
 

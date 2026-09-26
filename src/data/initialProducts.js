@@ -111,9 +111,9 @@ export const initialProducts = [
     isDealOfTheDay: false,
     isHit: false,
     isNew: true,
-    image: "https://images.unsplash.com/photo-1511707171634-5f897ff02560?w=600&auto=format&fit=crop&q=80",
+    image: "https://images.unsplash.com/photo-1580910051074-3eb694886505?w=600&auto=format&fit=crop&q=80",
     images: [
-      "https://images.unsplash.com/photo-1511707171634-5f897ff02560?w=600&auto=format&fit=crop&q=80"
+      "https://images.unsplash.com/photo-1580910051074-3eb694886505?w=600&auto=format&fit=crop&q=80"
     ],
     specs: {
       "Kamera": "To'rtta 50 MP Leica optikali kamera, 1 dyuymli sensor",
