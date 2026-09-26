@@ -4,6 +4,7 @@ import { AppProvider } from './context/AppContext';
 import { Header } from './components/layout/Header';
 import { Footer } from './components/layout/Footer';
 import { CatalogModal } from './components/layout/CatalogModal';
+import { QuickBuyModal } from './components/common/QuickBuyModal';
 import { Toast } from './components/common/Toast';
 import { ScrollToTop } from './components/common/ScrollToTop';
 
@@ -12,6 +13,7 @@ import { CatalogPage } from './pages/CatalogPage';
 import { ProductDetailPage } from './pages/ProductDetailPage';
 import { CartPage } from './pages/CartPage';
 import { FavoritesPage } from './pages/FavoritesPage';
+import { ComparePage } from './pages/ComparePage';
 import { StoresPage } from './pages/StoresPage';
 import { AdminPage } from './pages/AdminPage';
 import { LoginPage } from './pages/LoginPage';
@@ -29,6 +31,9 @@ function App() {
           {/* Mega-menu Catalog Modal */}
           <CatalogModal />
 
+          {/* 1-Click Quick Buy Modal */}
+          <QuickBuyModal />
+
           {/* Main Content View */}
           <main className="flex-1">
             <Routes>
@@ -37,6 +42,7 @@ function App() {
               <Route path="/product/:id" element={<ProductDetailPage />} />
               <Route path="/cart" element={<CartPage />} />
               <Route path="/favorites" element={<FavoritesPage />} />
+              <Route path="/compare" element={<ComparePage />} />
               <Route path="/stores" element={<StoresPage />} />
               <Route path="/admin" element={<AdminPage />} />
               <Route path="/login" element={<LoginPage />} />

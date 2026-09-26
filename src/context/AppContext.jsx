@@ -228,6 +228,92 @@ export const AppProvider = ({ children }) => {
   const isFavorite = (productId) => favorites.includes(productId);
   const clearFavorites = () => setFavorites([]);
 
+  // 6.2 Comparison State
+  const [compareList, setCompareList] = useState(() => {
+    const saved = localStorage.getItem('texnomart_compare');
+    if (saved) {
+      try { return JSON.parse(saved); } catch {}
+    }
+    return [1, 2]; // default comparison between iPhone 16 Pro Max and S24 Ultra
+  });
+
+  useEffect(() => {
+    localStorage.setItem('texnomart_compare', JSON.stringify(compareList));
+  }, [compareList]);
+
+  const toggleCompare = (productId) => {
+    setCompareList(prev => {
+      const exists = prev.includes(productId);
+      if (exists) {
+        showToast(lang === 'uz' ? "Taqqoslashdan chiqarildi" : "Удалено из сравнения", 'info');
+        return prev.filter(id => id !== productId);
+      } else {
+        if (prev.length >= 4) {
+          showToast(lang === 'uz' ? "Maksimal 4 ta mahsulotni taqqoslash mumkin!" : "Можно сравнивать до 4 товаров!", 'error');
+          return prev;
+        }
+        showToast(lang === 'uz' ? "Taqqoslashga qo'shildi!" : "Добавлено к сравнению!", 'success');
+        return [...prev, productId];
+      }
+    });
+  };
+
+  const isCompared = (productId) => compareList.includes(productId);
+  const clearCompare = () => setCompareList([]);
+
+  // 6.3 Quick Buy State (1-Click Order)
+  const [quickBuyProduct, setQuickBuyProduct] = useState(null);
+  const openQuickBuy = (product) => setQuickBuyProduct(product);
+  const closeQuickBuy = () => setQuickBuyProduct(null);
+
+  const submitQuickOrder = async ({ product, quantity = 1, customerName, phone, deliveryMethod, paymentMethod, address, comment }) => {
+    const price = product.price;
+    const totalAmount = price * quantity;
+    const newOrder = {
+      id: Math.floor(100000 + Math.random() * 900000),
+      date: new Date().toISOString().replace('T', ' ').slice(0, 16),
+      status: 'new',
+      customerName,
+      phone,
+      deliveryMethod: deliveryMethod || 'courier',
+      paymentMethod: paymentMethod || 'cash',
+      address: address || "Toshkent shahar",
+      comment: comment || "1 bosishda tezkor xarid",
+      items: [
+        {
+          id: product.id,
+          title: product.title,
+          price: product.price,
+          quantity: quantity,
+          image: product.image
+        }
+      ],
+      totalAmount,
+      subtotal: totalAmount,
+      discountAmount: 0,
+      isQuickBuy: true
+    };
+
+    setOrders(prev => [newOrder, ...prev]);
+
+    // Send to Telegram
+    const telegramMessage = formatOrderForTelegram(newOrder);
+    const tgResult = await sendTelegramMessage(telegramMessage);
+
+    showToast(lang === 'uz' ? `Buyurtma #${newOrder.id} qabul qilindi!` : `Заказ #${newOrder.id} оформлен!`, 'success');
+    return { order: newOrder, telegramResult: tgResult };
+  };
+
+  // 6.4 Selected City State
+  const [selectedCity, setSelectedCity] = useState(() => {
+    return localStorage.getItem('texnomart_city') || 'Toshkent';
+  });
+
+  const changeCity = (city) => {
+    setSelectedCity(city);
+    localStorage.setItem('texnomart_city', city);
+  };
+
   // 7. Orders State
   const [orders, setOrders] = useState(() => {
     const saved = localStorage.getItem('texnomart_orders');
@@ -375,6 +461,16 @@ export const AppProvider = ({ children }) => {
         toggleFavorite,
         isFavorite,
         clearFavorites,
+        compareList,
+        toggleCompare,
+        isCompared,
+        clearCompare,
+        quickBuyProduct,
+        openQuickBuy,
+        closeQuickBuy,
+        submitQuickOrder,
+        selectedCity,
+        changeCity,
         orders,
         addOrder,
         updateOrderStatus,

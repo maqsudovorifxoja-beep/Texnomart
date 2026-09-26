@@ -10,7 +10,8 @@ import {
   Microwave,
   Watch,
   Sparkles,
-  Wind
+  Wind,
+  ChevronRight
 } from 'lucide-react';
 
 const iconMap = {
@@ -28,17 +29,21 @@ export const CategoryPills = () => {
   const { t } = useApp();
 
   return (
-    <section className="py-8">
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-          <span className="w-2 h-6 bg-primary rounded-full" />
-          {t('allCategories')}
-        </h2>
+    <section className="py-6">
+      <div className="flex items-center justify-between mb-5">
+        <div className="flex items-center gap-2.5">
+          <span className="w-2.5 h-6 bg-primary rounded-full" />
+          <h2 className="text-xl sm:text-2xl font-black text-gray-900 dark:text-white tracking-tight">
+            Ommabop kategoriyalar
+          </h2>
+        </div>
+
         <Link
           to="/catalog"
-          className="text-xs sm:text-sm font-semibold text-amber-600 dark:text-amber-400 hover:underline"
+          className="text-xs sm:text-sm font-bold text-amber-600 dark:text-amber-400 hover:underline flex items-center gap-1"
         >
-          {t('viewAll')} &rarr;
+          <span>{t('viewAll')}</span>
+          <ChevronRight className="w-4 h-4" />
         </Link>
       </div>
 
@@ -47,14 +52,20 @@ export const CategoryPills = () => {
           <Link
             key={cat.id}
             to={`/catalog?category=${cat.slug}`}
-            className="group flex flex-col items-center justify-center p-3 sm:p-4 rounded-2xl bg-white dark:bg-[#1a1a1a] border border-gray-100 dark:border-gray-800 hover:border-amber-400 dark:hover:border-amber-500/50 hover:shadow-lg transition-all duration-200 text-center"
+            className="group flex flex-col items-center justify-between p-4 rounded-3xl bg-white dark:bg-[#1a1a1a] border border-gray-100 dark:border-gray-800 hover:border-amber-400 dark:hover:border-amber-500/50 hover:shadow-lg transition-all duration-300 text-center hover:-translate-y-1"
           >
-            <div className="w-12 h-12 rounded-xl bg-gray-50 dark:bg-gray-800/80 flex items-center justify-center mb-2 group-hover:scale-110 group-hover:bg-amber-50 dark:group-hover:bg-amber-950/30 transition-all">
+            <div className="w-14 h-14 rounded-2xl bg-[#f8f8f8] dark:bg-gray-800/80 flex items-center justify-center mb-2.5 group-hover:scale-110 group-hover:bg-amber-50 dark:group-hover:bg-amber-950/40 transition-all duration-300 shadow-inner">
               {iconMap[cat.icon]}
             </div>
-            <span className="text-xs font-semibold text-gray-700 dark:text-gray-300 group-hover:text-amber-600 dark:group-hover:text-amber-400 line-clamp-1">
-              {t(cat.nameKey)}
-            </span>
+            
+            <div>
+              <h3 className="text-xs font-bold text-gray-800 dark:text-gray-200 group-hover:text-amber-600 dark:group-hover:text-amber-400 line-clamp-1">
+                {t(cat.nameKey)}
+              </h3>
+              <span className="text-[10px] text-gray-400 font-semibold block mt-0.5">
+                {cat.count} ta mahsulot
+              </span>
+            </div>
           </Link>
         ))}
       </div>
