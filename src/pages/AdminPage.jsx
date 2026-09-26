@@ -16,6 +16,7 @@ import {
   ShoppingBag,
   TrendingUp,
   Users,
+  User,
   Plus,
   Edit,
   Trash2,
@@ -59,7 +60,12 @@ import {
   Square,
   ArrowUpRight,
   MoreVertical,
-  Percent
+  Percent,
+  Lock,
+  EyeOff,
+  LogOut,
+  ArrowRight,
+  Key
 } from 'lucide-react';
 
 export const AdminPage = () => {
@@ -91,10 +97,42 @@ export const AdminPage = () => {
     clearNotifications,
     isDark,
     toggleTheme,
+    changeLang,
     t,
     lang,
     showToast
   } = useApp();
+
+  // Admin Auth Credentials & Session State
+  const [adminCredentials, setAdminCredentials] = useState(() => {
+    const saved = localStorage.getItem('texnomart_admin_creds');
+    if (saved) {
+      try { return JSON.parse(saved); } catch {}
+    }
+    return { username: 'admin', password: 'admin123' };
+  });
+
+  const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(() => {
+    return sessionStorage.getItem('texnomart_admin_authenticated') === 'true';
+  });
+
+  // Purge any stale persistent auth on first load so user gets the login prompt
+  React.useEffect(() => {
+    localStorage.removeItem('texnomart_admin_authenticated');
+  }, []);
+
+  // Admin Login Form State
+  const [loginUsername, setLoginUsername] = useState('');
+  const [loginPassword, setLoginPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(true);
+  const [authError, setAuthError] = useState('');
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
+
+  // Change Password in Settings State
+  const [changeUsernameInput, setChangeUsernameInput] = useState('');
+  const [newPasswordInput, setNewPasswordInput] = useState('');
+  const [confirmPasswordInput, setConfirmPasswordInput] = useState('');
 
   // Navigation & Shell State
   const [activeTab, setActiveTab] = useState('dashboard'); // dashboard | products | orders | customers | banners | promos | telegram | settings
@@ -299,6 +337,70 @@ export const AdminPage = () => {
       };
     }).sort((a, b) => b.count - a.count).slice(0, 5);
   }, [products, lang]);
+
+  // ================= ADMIN AUTHENTICATION HANDLERS =================
+  const handleAdminLogin = (e) => {
+    e.preventDefault();
+    setIsLoggingIn(true);
+    setAuthError('');
+
+    setTimeout(() => {
+      const enteredUser = loginUsername.trim();
+      const enteredPass = loginPassword.trim();
+
+      if (enteredUser === adminCredentials.username && enteredPass === adminCredentials.password) {
+        setIsAdminAuthenticated(true);
+        if (rememberMe) {
+          localStorage.setItem('texnomart_admin_authenticated', 'true');
+        } else {
+          sessionStorage.setItem('texnomart_admin_authenticated', 'true');
+        }
+        showToast(lang === 'uz' ? "Boshqaruv tizimiga xush kelibsiz!" : "Добро пожаловать в админ панель!", 'success');
+      } else {
+        setAuthError(lang === 'uz' ? "Login yoki parol noto'g'ri! Iltimos, qayta tekshiring." : "Неверный логин или пароль!");
+        showToast(lang === 'uz' ? "Kirish ma'lumotlari xato!" : "Ошибка входа!", 'error');
+      }
+      setIsLoggingIn(false);
+    }, 350);
+  };
+
+  const handleAdminLogout = () => {
+    if (window.confirm("Boshqaruv panelidan chiqmoqchimisiz?")) {
+      setIsAdminAuthenticated(false);
+      localStorage.removeItem('texnomart_admin_authenticated');
+      sessionStorage.removeItem('texnomart_admin_authenticated');
+      setLoginPassword('');
+      showToast(lang === 'uz' ? "Tizimdan muvaffaqiyatli chiqdingiz" : "Вы вышли из системы", 'info');
+    }
+  };
+
+  const handleAutofillDemo = () => {
+    setLoginUsername(adminCredentials.username);
+    setLoginPassword(adminCredentials.password);
+    setAuthError('');
+  };
+
+  const handleChangeCredentials = (e) => {
+    e.preventDefault();
+    if (!changeUsernameInput.trim() || !newPasswordInput.trim()) {
+      showToast("Iltimos, yangi login va parolni kiriting!", 'error');
+      return;
+    }
+    if (newPasswordInput !== confirmPasswordInput) {
+      showToast("Parollar bir-biriga mos kelmadi!", 'error');
+      return;
+    }
+    const updated = {
+      username: changeUsernameInput.trim(),
+      password: newPasswordInput.trim()
+    };
+    setAdminCredentials(updated);
+    localStorage.setItem('texnomart_admin_creds', JSON.stringify(updated));
+    setChangeUsernameInput('');
+    setNewPasswordInput('');
+    setConfirmPasswordInput('');
+    showToast("Admin login va paroli muvaffaqiyatli o'zgartirildi!", 'success');
+  };
 
   // ================= PRODUCT ACTIONS =================
   const handleOpenAddModal = () => {
@@ -586,6 +688,214 @@ Status: <b>Faol (Online) ✅</b>
     { id: 'settings', label: 'Sozlamalar', icon: Settings, badge: null },
   ];
 
+  // If not authenticated, render Login Screen
+  if (!isAdminAuthenticated) {
+    return (
+      <div className="min-h-screen bg-[#07090e] text-slate-100 flex flex-col justify-between p-4 sm:p-6 relative overflow-hidden font-sans antialiased">
+        {/* Ambient Gradient Glows */}
+        <div className="absolute top-1/4 -left-20 w-96 h-96 bg-amber-400/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-1/4 -right-20 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
+
+        {/* Top Navbar on Login Screen: Logo, Storefront Link, Large Lang Switcher, Theme Switcher */}
+        <div className="w-full max-w-5xl mx-auto flex items-center justify-between py-2 z-10">
+          <Link to="/" className="flex items-center gap-2.5 group">
+            <div className="w-10 h-10 rounded-2xl bg-amber-400 text-black flex items-center justify-center font-black text-xl shadow-lg shadow-amber-400/20 group-hover:scale-105 transition-transform">
+              T
+            </div>
+            <div>
+              <span className="font-black text-base text-white tracking-wider flex items-center gap-1.5">
+                TEXNOMART
+                <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-400 text-black font-extrabold">PRO</span>
+              </span>
+              <span className="text-[10px] text-slate-400 block font-medium">Boshqaruv Tizimi</span>
+            </div>
+          </Link>
+
+          <div className="flex items-center gap-2 sm:gap-3">
+            {/* Large Language Switcher */}
+            <div className="flex items-center bg-slate-900 border border-slate-700/80 p-1 rounded-2xl shadow-inner">
+              {[
+                { code: 'uz', flag: "🇺🇿", label: "O'zbek" },
+                { code: 'ru', flag: "🇷🇺", label: "Русский" },
+                { code: 'en', flag: "🇬🇧", label: "English" },
+              ].map((item) => (
+                <button
+                  key={item.code}
+                  onClick={() => changeLang(item.code)}
+                  className={`px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-xl transition-all flex items-center gap-1.5 text-xs font-black cursor-pointer ${
+                    lang === item.code
+                      ? 'bg-amber-400 text-black font-black shadow-md scale-105'
+                      : 'text-slate-400 hover:text-white hover:bg-slate-800'
+                  }`}
+                >
+                  <span className="text-sm">{item.flag}</span>
+                  <span className="hidden sm:inline">{item.label}</span>
+                </button>
+              ))}
+            </div>
+
+            {/* Large Theme Switcher Toggle */}
+            <button
+              onClick={toggleTheme}
+              className="flex items-center gap-2 px-3 py-1.5 rounded-2xl bg-slate-900 hover:bg-slate-800 border border-slate-700/80 hover:border-amber-400/50 text-white font-black text-xs transition-all shadow-xs active:scale-95 group cursor-pointer"
+            >
+              <div className={`p-1.5 rounded-xl transition-transform group-hover:rotate-12 ${
+                isDark ? 'bg-amber-400 text-black shadow-sm' : 'bg-slate-800 text-amber-400'
+              }`}>
+                {isDark ? <Moon className="w-4 h-4 fill-current" /> : <Sun className="w-4 h-4 fill-current" />}
+              </div>
+              <span className="font-extrabold tracking-wide hidden sm:inline">
+                {isDark ? "Tungi" : "Kunduzgi"}
+              </span>
+            </button>
+          </div>
+        </div>
+
+        {/* Center Card */}
+        <div className="max-w-md w-full mx-auto my-auto p-6 sm:p-8 rounded-3xl bg-[#0f141f]/95 border border-slate-800 shadow-2xl backdrop-blur-xl relative z-10 space-y-6">
+          
+          {/* Logo & Header */}
+          <div className="text-center space-y-2.5">
+            <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-amber-500 to-yellow-300 text-black flex items-center justify-center mx-auto shadow-xl shadow-amber-400/25 ring-4 ring-amber-400/20">
+              <Lock className="w-8 h-8 stroke-[2.5]" />
+            </div>
+            <h2 className="text-2xl font-black text-white tracking-tight">
+              {lang === 'uz' ? "Admin Tizimiga Kirish" : lang === 'ru' ? "Вход в панель управления" : "Admin Portal Sign In"}
+            </h2>
+            <p className="text-xs text-slate-400 max-w-xs mx-auto">
+              {lang === 'uz' ? "Texnomart do'koni boshqaruv tizimiga kirish uchun login va parolingizni kiriting" :
+               lang === 'ru' ? "Введите свои учетные данные для управления интернет-магазином" :
+               "Enter your administrative credentials to access the storefront dashboard"}
+            </p>
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-400/10 border border-amber-400/30 text-[11px] font-bold text-amber-300">
+              <ShieldCheck className="w-3.5 h-3.5" />
+              <span>Xavfsiz Administratsiya Tizimi</span>
+            </div>
+          </div>
+
+          {/* Error Alert Banner */}
+          {authError && (
+            <div className="p-3.5 rounded-xl bg-rose-500/15 border border-rose-500/40 text-rose-300 text-xs flex items-center gap-2.5 animate-in fade-in slide-in-from-top-2">
+              <AlertCircle className="w-5 h-5 shrink-0 text-rose-400" />
+              <span className="font-semibold">{authError}</span>
+            </div>
+          )}
+
+          {/* Login Form */}
+          <form onSubmit={handleAdminLogin} className="space-y-4">
+            <div>
+              <label className="block text-xs font-bold text-slate-300 mb-1.5">
+                {lang === 'uz' ? "Login / Foydalanuvchi nomi" : lang === 'ru' ? "Логин администратора" : "Admin Username"}
+              </label>
+              <div className="relative">
+                <input
+                  type="text"
+                  required
+                  value={loginUsername}
+                  onChange={(e) => setLoginUsername(e.target.value)}
+                  placeholder="admin"
+                  className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-700 bg-slate-900 text-xs font-semibold text-white focus:outline-none focus:border-amber-400 transition-colors"
+                />
+                <User className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold text-slate-300 mb-1.5">
+                {lang === 'uz' ? "Maxfiy parol" : lang === 'ru' ? "Пароль" : "Password"}
+              </label>
+              <div className="relative">
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  required
+                  value={loginPassword}
+                  onChange={(e) => setLoginPassword(e.target.value)}
+                  placeholder="admin123"
+                  className="w-full pl-10 pr-10 py-3 rounded-xl border border-slate-700 bg-slate-900 text-xs font-semibold text-white focus:outline-none focus:border-amber-400 transition-colors font-mono"
+                />
+                <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="p-1.5 text-slate-400 hover:text-white absolute right-2.5 top-1/2 -translate-y-1/2 cursor-pointer transition-colors"
+                  title={showPassword ? "Parolni yashirish" : "Parolni ko'rsatish"}
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4 text-amber-400" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between text-xs pt-1">
+              <label className="flex items-center gap-2 cursor-pointer text-slate-400 hover:text-slate-200">
+                <input
+                  type="checkbox"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                  className="rounded text-amber-400 bg-slate-900 border-slate-700 focus:ring-0"
+                />
+                <span>{lang === 'uz' ? "Meni eslab qolish" : lang === 'ru' ? "Запомнить меня" : "Remember me"}</span>
+              </label>
+            </div>
+
+            <button
+              type="submit"
+              disabled={isLoggingIn}
+              className="w-full py-3.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-black font-black text-sm shadow-lg shadow-amber-400/25 transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer"
+            >
+              <span>{isLoggingIn ? (lang === 'uz' ? "Tekshirilmoqda..." : "Проверка...") : (lang === 'uz' ? "Boshqaruv paneliga kirish" : lang === 'ru' ? "Войти в систему" : "Sign In to Dashboard")}</span>
+              <ArrowRight className="w-4 h-4 stroke-[2.5]" />
+            </button>
+          </form>
+
+          {/* Quick Demo Credentials Autofill Helper */}
+          <div className="p-4 rounded-2xl bg-slate-900/90 border border-slate-800 text-xs space-y-2.5">
+            <div className="flex items-center justify-between">
+              <span className="font-bold text-slate-300 flex items-center gap-1.5">
+                <Key className="w-3.5 h-3.5 text-amber-400" />
+                {lang === 'uz' ? "Standart kirish ma'lumotlari:" : lang === 'ru' ? "Стандартный доступ:" : "Default Credentials:"}
+              </span>
+              <button
+                type="button"
+                onClick={handleAutofillDemo}
+                className="px-2.5 py-1 rounded-lg bg-amber-400 hover:bg-amber-300 text-black text-[11px] font-black flex items-center gap-1 shadow-sm transition-transform active:scale-95 cursor-pointer"
+                title="Maydonlarni avtomatik to'ldirish"
+              >
+                <span>⚡️ 1 bosishda to'ldirish</span>
+              </button>
+            </div>
+            <div className="grid grid-cols-2 gap-2 font-mono text-xs">
+              <div className="p-2 rounded-xl bg-slate-800/80 border border-slate-700/60 text-slate-300 flex flex-col">
+                <span className="text-[10px] text-slate-500 font-sans uppercase font-bold">Login</span>
+                <b className="text-amber-300 font-bold select-all">{adminCredentials.username}</b>
+              </div>
+              <div className="p-2 rounded-xl bg-slate-800/80 border border-slate-700/60 text-slate-300 flex flex-col">
+                <span className="text-[10px] text-slate-500 font-sans uppercase font-bold">Parol</span>
+                <b className="text-amber-300 font-bold select-all">{adminCredentials.password}</b>
+              </div>
+            </div>
+          </div>
+
+          <div className="pt-2 text-center border-t border-slate-800">
+            <Link
+              to="/"
+              className="text-xs font-bold text-slate-400 hover:text-amber-400 transition-colors inline-flex items-center gap-2"
+            >
+              <Store className="w-4 h-4 text-amber-400" />
+              <span>{lang === 'uz' ? "Do'kon bosh sahifasiga qaytish" : lang === 'ru' ? "Вернуться в интернет-магазин" : "Back to Texnomart Store"}</span>
+            </Link>
+          </div>
+
+        </div>
+
+        {/* Footer info */}
+        <div className="text-center py-2 text-slate-500 text-[11px] z-10">
+          Texnomart Enterprise Admin System &bull; Barcha huquqlar himoyalangan
+        </div>
+      </div>
+    );
+  }
+
+
   return (
     <div className="flex h-screen overflow-hidden bg-[#0a0d14] text-slate-100 font-sans antialiased">
       
@@ -674,17 +984,24 @@ Status: <b>Faol (Online) ✅</b>
           </Link>
 
           {!isSidebarCollapsed && (
-            <div className="p-2.5 rounded-xl bg-slate-900/80 border border-slate-800 flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-amber-500 to-yellow-300 text-black font-black text-xs flex items-center justify-center shadow-xs">
-                OA
+            <div className="p-2.5 rounded-xl bg-slate-900/80 border border-slate-800 flex items-center justify-between">
+              <div className="flex items-center gap-2.5 min-w-0">
+                <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-amber-500 to-yellow-300 text-black font-black text-xs flex items-center justify-center shadow-xs uppercase">
+                  {adminCredentials.username.charAt(0)}
+                </div>
+                <div className="min-w-0">
+                  <p className="text-xs font-bold text-white truncate">{adminCredentials.username}</p>
+                  <p className="text-[10px] text-emerald-400 font-semibold">Super Admin</p>
+                </div>
               </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-xs font-bold text-white truncate">Orifxo'ja Admin</p>
-                <p className="text-[10px] text-emerald-400 flex items-center gap-1 font-semibold">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
-                  Super Administrator
-                </p>
-              </div>
+
+              <button
+                onClick={handleAdminLogout}
+                className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-slate-800 transition-colors"
+                title="Tizimdan chiqish (Logout)"
+              >
+                <LogOut className="w-4 h-4" />
+              </button>
             </div>
           )}
         </div>
@@ -741,13 +1058,25 @@ Status: <b>Faol (Online) ✅</b>
               })}
             </nav>
 
-            <Link
-              to="/"
-              className="w-full flex items-center justify-center gap-2 p-2.5 rounded-xl bg-slate-800 text-slate-200 text-xs font-bold"
-            >
-              <ExternalLink className="w-4 h-4 text-amber-400" />
-              <span>Do'konga o'tish</span>
-            </Link>
+            <div className="space-y-2 pt-2 border-t border-slate-800">
+              <Link
+                to="/"
+                className="w-full flex items-center justify-center gap-2 p-2.5 rounded-xl bg-slate-800 text-slate-200 text-xs font-bold"
+              >
+                <ExternalLink className="w-4 h-4 text-amber-400" />
+                <span>Do'konga o'tish</span>
+              </Link>
+              <button
+                onClick={() => {
+                  setIsMobileSidebarOpen(false);
+                  handleAdminLogout();
+                }}
+                className="w-full flex items-center justify-center gap-2 p-2.5 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 text-xs font-bold border border-rose-500/40 transition-colors"
+              >
+                <LogOut className="w-4 h-4" />
+                <span>Tizimdan chiqish (Logout)</span>
+              </button>
+            </div>
           </div>
         </div>
       )}
@@ -839,25 +1168,63 @@ Status: <b>Faol (Online) ✅</b>
               )}
             </div>
 
+            {/* Large Language Switcher */}
+            <div className="flex items-center bg-slate-900 border border-slate-700/80 p-1 rounded-2xl shadow-inner">
+              {[
+                { code: 'uz', flag: "🇺🇿", label: "O'zb" },
+                { code: 'ru', flag: "🇷🇺", label: "Рус" },
+                { code: 'en', flag: "🇬🇧", label: "Eng" },
+              ].map((item) => (
+                <button
+                  key={item.code}
+                  onClick={() => changeLang(item.code)}
+                  className={`px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-xl transition-all flex items-center gap-1.5 text-xs font-black cursor-pointer ${
+                    lang === item.code
+                      ? 'bg-amber-400 text-black font-black shadow-md scale-105'
+                      : 'text-slate-400 hover:text-white hover:bg-slate-800'
+                  }`}
+                >
+                  <span className="text-sm">{item.flag}</span>
+                  <span className="hidden sm:inline">{item.label}</span>
+                </button>
+              ))}
+            </div>
+
             {/* Live Storefront Link */}
             <Link
               to="/"
-              className="p-2 rounded-xl text-slate-400 hover:text-amber-400 hover:bg-slate-800 transition-colors hidden sm:flex items-center gap-1.5 text-xs font-bold"
+              className="px-3 py-2 rounded-xl text-slate-300 hover:text-amber-400 bg-slate-800/80 hover:bg-slate-800 border border-slate-700/60 transition-all hidden lg:flex items-center gap-2 text-xs font-bold"
               title="Do'kon sahifasiga o'tish"
             >
-              <Store className="w-4 h-4" />
-              <span>Do'kon</span>
+              <Store className="w-4 h-4 text-amber-400" />
+              <span>Saytga o'tish</span>
             </Link>
 
-            {/* Theme Toggle */}
+            {/* Large Theme Switcher Toggle */}
             <button
               onClick={toggleTheme}
-              className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
-              title="Mavzuni almashtirish"
+              className="flex items-center gap-2 px-3 py-1.5 sm:px-3.5 sm:py-1.5 rounded-2xl bg-slate-900 hover:bg-slate-800 border border-slate-700/80 hover:border-amber-400/50 text-white font-black text-xs transition-all shadow-xs active:scale-95 group cursor-pointer"
+              title={isDark ? "Kunduzgi rejimga o'tish" : "Tungi rejimga o'tish"}
             >
-              {isDark ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4" />}
+              <div className={`p-1.5 rounded-xl transition-transform group-hover:rotate-12 ${
+                isDark ? 'bg-amber-400 text-black shadow-sm' : 'bg-slate-800 text-amber-400'
+              }`}>
+                {isDark ? <Moon className="w-4 h-4 fill-current" /> : <Sun className="w-4 h-4 fill-current" />}
+              </div>
+              <span className="font-extrabold tracking-wide hidden sm:inline">
+                {isDark ? "Tungi" : "Kunduzgi"}
+              </span>
             </button>
 
+            {/* Logout Button */}
+            <button
+              onClick={handleAdminLogout}
+              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-2xl bg-rose-500/15 hover:bg-rose-500/25 text-rose-300 border border-rose-500/40 transition-all active:scale-95 text-xs font-black cursor-pointer shadow-xs"
+              title="Tizimdan chiqish (Logout)"
+            >
+              <LogOut className="w-4 h-4 stroke-[2.5]" />
+              <span className="hidden sm:inline">Chiqish</span>
+            </button>
           </div>
 
         </header>
@@ -1965,6 +2332,81 @@ Status: <b>Faol (Online) ✅</b>
               </div>
 
               <div className="space-y-4">
+                {/* Admin Login & Password Security Management */}
+                <div className="p-5 rounded-2xl bg-slate-900 border border-slate-800 space-y-4">
+                  <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+                    <div>
+                      <span className="font-bold text-sm text-white flex items-center gap-2">
+                        <Key className="w-4 h-4 text-amber-400" />
+                        Admin Login va Parolini o'zgartirish
+                      </span>
+                      <span className="text-[11px] text-slate-400">
+                        Boshqaruv paneliga kirish ma'lumotlarini yangilang
+                      </span>
+                    </div>
+                    <span className="text-[11px] font-mono px-2.5 py-1 rounded-xl bg-slate-800 border border-slate-700 text-slate-300">
+                      Hozirgi login: <b className="text-amber-400">{adminCredentials.username}</b>
+                    </span>
+                  </div>
+
+                  <form onSubmit={handleChangeCredentials} className="space-y-3">
+                    <div>
+                      <label className="block text-xs font-bold text-slate-300 mb-1">
+                        Yangi Login / Foydalanuvchi nomi
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        value={changeUsernameInput}
+                        onChange={(e) => setChangeUsernameInput(e.target.value)}
+                        placeholder={adminCredentials.username}
+                        className="w-full p-2.5 rounded-xl border border-slate-700 bg-slate-950 text-xs font-semibold text-white focus:outline-none focus:border-amber-400"
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-xs font-bold text-slate-300 mb-1">
+                          Yangi Parol
+                        </label>
+                        <input
+                          type="password"
+                          required
+                          value={newPasswordInput}
+                          onChange={(e) => setNewPasswordInput(e.target.value)}
+                          placeholder="••••••••"
+                          className="w-full p-2.5 rounded-xl border border-slate-700 bg-slate-950 text-xs font-semibold text-white focus:outline-none focus:border-amber-400"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold text-slate-300 mb-1">
+                          Parolni tasdiqlang
+                        </label>
+                        <input
+                          type="password"
+                          required
+                          value={confirmPasswordInput}
+                          onChange={(e) => setConfirmPasswordInput(e.target.value)}
+                          placeholder="••••••••"
+                          className="w-full p-2.5 rounded-xl border border-slate-700 bg-slate-950 text-xs font-semibold text-white focus:outline-none focus:border-amber-400"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="pt-1 flex items-center justify-between">
+                      <span className="text-[11px] text-slate-400">
+                        O'zgartirilgandan so'ng yangi login/parol bilan kirasiz.
+                      </span>
+                      <button
+                        type="submit"
+                        className="px-5 py-2.5 bg-amber-400 hover:bg-amber-300 text-black font-black text-xs rounded-xl shadow-md shadow-amber-400/20 transition-all active:scale-95"
+                      >
+                        Yangi ma'lumotlarni saqlash
+                      </button>
+                    </div>
+                  </form>
+                </div>
+
                 <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-between">
                   <div>
                     <span className="font-bold text-xs text-white block">Katalogni tiklash</span>

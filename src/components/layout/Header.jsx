@@ -128,34 +128,43 @@ export const Header = () => {
               <span>+998 (71) 209-99-44</span>
             </a>
 
-            {/* Language Switcher */}
-            <div className="flex items-center bg-gray-200/80 dark:bg-gray-800 rounded-lg p-0.5 font-semibold text-[11px]">
+            {/* Language Switcher (Enlarged & Flag Badges) */}
+            <div className="flex items-center bg-gray-200/90 dark:bg-gray-800 p-1 rounded-2xl border border-gray-300/80 dark:border-gray-700 shadow-inner">
               {[
-                { code: 'uz', label: "O'zb" },
-                { code: 'ru', label: "Рус" },
-                { code: 'en', label: "Eng" },
+                { code: 'uz', flag: "🇺🇿", label: "O'zbek" },
+                { code: 'ru', flag: "🇷🇺", label: "Русский" },
+                { code: 'en', flag: "🇬🇧", label: "English" },
               ].map((item) => (
                 <button
                   key={item.code}
                   onClick={() => changeLang(item.code)}
-                  className={`px-2 py-0.5 rounded-md transition-all ${
+                  className={`px-3 py-1.5 rounded-xl transition-all flex items-center gap-1.5 text-xs font-black cursor-pointer ${
                     lang === item.code
-                      ? 'bg-amber-400 text-black font-extrabold shadow-xs'
-                      : 'text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white'
+                      ? 'bg-amber-400 text-black font-black shadow-md scale-105'
+                      : 'text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white hover:bg-gray-300/60 dark:hover:bg-gray-700/60'
                   }`}
                 >
-                  {item.label}
+                  <span className="text-sm">{item.flag}</span>
+                  <span>{item.label}</span>
                 </button>
               ))}
             </div>
 
-            {/* Dark Mode Toggle */}
+            {/* Dark / Light Mode Toggle (Enlarged Pill with Icon & Label) */}
             <button
               onClick={toggleTheme}
               aria-label="Toggle dark mode"
-              className="p-1 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 transition-colors"
+              className="flex items-center gap-2 px-3.5 py-1.5 rounded-2xl bg-gray-200/90 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700 border border-gray-300/80 dark:border-gray-700 text-gray-900 dark:text-white transition-all shadow-xs active:scale-95 group font-black text-xs cursor-pointer"
+              title={isDark ? "Kunduzgi rejimga o'tish" : "Tungi rejimga o'tish"}
             >
-              {isDark ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-gray-700" />}
+              <div className={`p-1.5 rounded-xl transition-transform group-hover:rotate-12 ${
+                isDark ? 'bg-amber-400 text-black shadow-sm' : 'bg-amber-100 text-amber-600'
+              }`}>
+                {isDark ? <Moon className="w-4 h-4 fill-current" /> : <Sun className="w-4 h-4 fill-current" />}
+              </div>
+              <span className="font-extrabold tracking-wide">
+                {isDark ? "Tungi" : "Kunduzgi"}
+              </span>
             </button>
           </div>
         </div>
@@ -418,13 +427,36 @@ export const Header = () => {
             )}
           </div>
 
-          {/* Mobile Theme Toggle */}
-          <div className="flex items-center md:hidden">
+          {/* Mobile Theme & Language Controls (Enlarged) */}
+          <div className="flex items-center gap-2 md:hidden">
+            {/* Mobile Language Switcher */}
+            <div className="flex items-center bg-gray-100 dark:bg-gray-800 p-0.5 rounded-xl border border-gray-200 dark:border-gray-700">
+              {[
+                { code: 'uz', label: "O'z" },
+                { code: 'ru', label: "Ру" },
+                { code: 'en', label: "En" },
+              ].map(item => (
+                <button
+                  key={item.code}
+                  onClick={() => changeLang(item.code)}
+                  className={`px-2 py-1 rounded-lg text-xs font-black transition-all ${
+                    lang === item.code
+                      ? 'bg-amber-400 text-black shadow-xs font-black'
+                      : 'text-gray-500 hover:text-black dark:hover:text-white'
+                  }`}
+                >
+                  {item.label}
+                </button>
+              ))}
+            </div>
+
+            {/* Mobile Theme Toggle Button */}
             <button
               onClick={toggleTheme}
-              className="p-2 rounded-xl text-gray-600 dark:text-gray-300"
+              className="p-2 rounded-xl bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200 border border-gray-200 dark:border-gray-700 shadow-xs active:scale-95 transition-all"
+              title="Mavzuni almashtirish"
             >
-              {isDark ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4" />}
+              {isDark ? <Moon className="w-5 h-5 text-amber-400 fill-current" /> : <Sun className="w-5 h-5 text-amber-500 fill-current" />}
             </button>
           </div>
 
