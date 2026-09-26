@@ -47,3 +47,52 @@
 .animate-soft-pulse {
   animation: softPulse 2.5s infinite ease-in-out;
 }
+
+/* Page Transition Keyframes */
+@keyframes pageFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(14px) scale(0.996);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-page-enter {
+  animation: pageFadeIn 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* YouTube/Next.js-style top loading progress bar on route change */
+@keyframes routeProgressBar {
+  0% {
+    width: 0%;
+    opacity: 1;
+  }
+  40% {
+    width: 70%;
+    opacity: 1;
+  }
+  80% {
+    width: 92%;
+    opacity: 1;
+  }
+  100% {
+    width: 100%;
+    opacity: 0;
+  }
+}
+
+.route-progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3.5px;
+  background: linear-gradient(90deg, #fbc100, #ff8800, #fbc100);
+  z-index: 99999;
+  pointer-events: none;
+  box-shadow: 0 0 12px rgba(251, 193, 0, 0.9), 0 0 5px #fbc100;
+  animation: routeProgressBar 0.45s ease-out forwards;
+}
+

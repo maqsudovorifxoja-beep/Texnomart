@@ -333,6 +333,55 @@ Jami buyurtmalar: ${orders.length} ta
     showToast("Mahsulotlar JSON fayl sifatida yuklandi!", 'success');
   };
 
+  // Export Orders to CSV
+  const handleExportOrdersCSV = () => {
+    if (orders.length === 0) {
+      showToast("Eksport qilish uchun buyurtmalar mavjud emas!", 'info');
+      return;
+    }
+    const headers = ["Buyurtma_ID", "Sana", "Mijoz", "Telefon", "Manzil", "Yetkazish", "Tolov_turi", "Summa_som", "Status"];
+    const rows = orders.map(o => [
+      `#${o.id}`,
+      `"${o.date}"`,
+      `"${o.customerName}"`,
+      `"${o.phone}"`,
+      `"${(o.address || '').replace(/"/g, '""')}"`,
+      o.deliveryMethod,
+      o.paymentMethod,
+      o.totalAmount,
+      o.status
+    ]);
+
+    const csvContent = "\uFEFF" + [headers.join(","), ...rows.map(r => r.join(","))].join("\n");
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", `texnomart_orders_${Date.now()}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    showToast("Buyurtmalar CSV fayli yuklandi!", 'success');
+  };
+
+  // Top Categories Breakdown for Dashboard
+  const categoryBreakdown = useMemo(() => {
+    const counts = {};
+    products.forEach(p => {
+      counts[p.category] = (counts[p.category] || 0) + 1;
+    });
+    return Object.entries(counts).map(([cat, count]) => {
+      const catData = categories.find(c => c.slug === cat);
+      const name = catData?.title ? (catData.title[lang] || catData.title.uz) : cat;
+      return {
+        category: cat,
+        name,
+        count,
+        percent: Math.round((count / products.length) * 100)
+      };
+    }).sort((a, b) => b.count - a.count).slice(0, 5);
+  }, [products, lang]);
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
       
@@ -555,6 +604,174 @@ Jami buyurtmalar: ${orders.length} ta
               ))}
             </div>
           </div>
+
+          {/* Grid: Category Breakdown & Quick Actions */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            
+            {/* 1. Category Breakdown (7 Cols) */}
+            <div className="lg:col-span-7 p-6 rounded-3xl bg-white dark:bg-[#1a1a1a] border border-gray-100 dark:border-gray-800 shadow-sm space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="font-extrabold text-base text-gray-900 dark:text-white">
+                    Kategoriyalar bo'yicha assortiment taqsimoti
+                  </h3>
+                  <p className="text-xs text-gray-400">Tovarlar soni va ularning ulushi</p>
+                </div>
+                <span className="text-xs font-bold text-gray-500">
+                  Jami: {products.length} ta tovar
+                </span>
+              </div>
+
+              <div className="space-y-3.5 pt-2">
+                {categoryBreakdown.map((item, idx) => (
+                  <div key={idx} className="space-y-1.5">
+                    <div className="flex justify-between text-xs font-bold">
+                      <span className="text-gray-800 dark:text-gray-200">{item.name}</span>
+                      <span className="text-gray-500 font-mono">{item.count} ta ({item.percent}%)</span>
+                    </div>
+                    <div className="w-full h-2.5 rounded-full bg-gray-100 dark:bg-gray-800 overflow-hidden">
+                      <div
+                        style={{ width: `${item.percent}%` }}
+                        className={`h-full rounded-full transition-all duration-500 ${
+                          idx === 0 ? 'bg-amber-400' :
+                          idx === 1 ? 'bg-blue-500' :
+                          idx === 2 ? 'bg-purple-500' :
+                          idx === 3 ? 'bg-emerald-500' : 'bg-rose-500'
+                        }`}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* 2. Quick Actions Panel (5 Cols) */}
+            <div className="lg:col-span-5 p-6 rounded-3xl bg-white dark:bg-[#1a1a1a] border border-gray-100 dark:border-gray-800 shadow-sm space-y-4">
+              <div>
+                <h3 className="font-extrabold text-base text-gray-900 dark:text-white">
+                  Tezkor amallar & Boshqaruv
+                </h3>
+                <p className="text-xs text-gray-400">Do'konni boshqarish uchun tezkor tugmalar</p>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
+                <button
+                  onClick={handleOpenAddModal}
+                  className="p-3.5 rounded-2xl bg-primary hover:bg-primary-hover text-black font-extrabold text-xs flex items-center gap-2.5 shadow-sm transition-all active:scale-95"
+                >
+                  <Plus className="w-4 h-4 stroke-[3]" />
+                  <span>Yangi tovar qo'shish</span>
+                </button>
+
+                <button
+                  onClick={handleExportOrdersCSV}
+                  className="p-3.5 rounded-2xl bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-900 dark:text-white font-bold text-xs flex items-center gap-2.5 transition-all"
+                >
+                  <Download className="w-4 h-4 text-emerald-500" />
+                  <span>Buyurtmalar CSV</span>
+                </button>
+
+                <button
+                  onClick={handleSendTestTelegram}
+                  disabled={testSending}
+                  className="p-3.5 rounded-2xl bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-900 dark:text-white font-bold text-xs flex items-center gap-2.5 transition-all"
+                >
+                  <Send className="w-4 h-4 text-blue-500" />
+                  <span>{testSending ? "Yuborilmoqda..." : "Telegram test xabar"}</span>
+                </button>
+
+                <button
+                  onClick={handleExportProductsJSON}
+                  className="p-3.5 rounded-2xl bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-900 dark:text-white font-bold text-xs flex items-center gap-2.5 transition-all"
+                >
+                  <Copy className="w-4 h-4 text-amber-500" />
+                  <span>Tovarlar zaxirasi</span>
+                </button>
+              </div>
+
+              <div className="pt-3 border-t border-gray-100 dark:border-gray-800 flex items-center justify-between text-xs text-gray-500">
+                <span className="flex items-center gap-1.5">
+                  <ShieldCheck className="w-4 h-4 text-emerald-500" />
+                  <span>Telegram bot faol: @orifxojabot</span>
+                </span>
+                <button
+                  onClick={resetProductsToDefault}
+                  className="text-rose-500 hover:underline font-bold text-[11px]"
+                >
+                  Katalogni tiklash
+                </button>
+              </div>
+            </div>
+
+          </div>
+
+          {/* 3. Recent Orders Preview Table */}
+          <div className="p-6 rounded-3xl bg-white dark:bg-[#1a1a1a] border border-gray-100 dark:border-gray-800 shadow-sm space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="font-extrabold text-base text-gray-900 dark:text-white">
+                  So'nggi kelib tushgan buyurtmalar
+                </h3>
+                <p className="text-xs text-gray-400">Do'konga tushgan eng yangi 5 ta buyurtma</p>
+              </div>
+
+              <button
+                onClick={() => setActiveTab('orders')}
+                className="text-xs font-bold text-amber-600 dark:text-amber-400 hover:underline flex items-center gap-1"
+              >
+                <span>Barcha buyurtmalar ({orders.length})</span>
+                <span>&rarr;</span>
+              </button>
+            </div>
+
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs">
+                <thead className="bg-gray-50 dark:bg-[#141414] text-gray-500 uppercase tracking-wider border-b border-gray-100 dark:border-gray-800">
+                  <tr>
+                    <th className="p-3">ID</th>
+                    <th className="p-3">Mijoz</th>
+                    <th className="p-3">Telefon</th>
+                    <th className="p-3">Summa</th>
+                    <th className="p-3">Holati</th>
+                    <th className="p-3 text-right">Amal</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
+                  {orders.slice(0, 5).map(ord => (
+                    <tr key={ord.id} className="hover:bg-amber-50/40 dark:hover:bg-amber-950/20 transition-colors">
+                      <td className="p-3 font-mono font-bold text-amber-600">#{ord.id}</td>
+                      <td className="p-3 font-semibold text-gray-900 dark:text-white">{ord.customerName}</td>
+                      <td className="p-3 font-mono text-gray-500">{ord.phone}</td>
+                      <td className="p-3 font-black text-gray-900 dark:text-white">{formatPrice(ord.totalAmount, lang)}</td>
+                      <td className="p-3">
+                        <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${
+                          ord.status === 'completed' ? 'bg-emerald-100 text-emerald-800' :
+                          ord.status === 'processing' ? 'bg-blue-100 text-blue-800' :
+                          ord.status === 'delivering' ? 'bg-purple-100 text-purple-800' :
+                          ord.status === 'cancelled' ? 'bg-rose-100 text-rose-800' :
+                          'bg-amber-100 text-amber-900'
+                        }`}>
+                          {ord.status === 'completed' ? 'Yakunlangan' :
+                           ord.status === 'processing' ? 'Jarayonda' :
+                           ord.status === 'delivering' ? 'Yetkazilmoqda' :
+                           ord.status === 'cancelled' ? 'Bekor qilingan' : 'Yangi'}
+                        </span>
+                      </td>
+                      <td className="p-3 text-right">
+                        <button
+                          onClick={() => setSelectedOrderDetails(ord)}
+                          className="px-3 py-1 bg-gray-100 dark:bg-gray-800 hover:bg-amber-100 hover:text-black font-bold text-xs rounded-lg transition-colors"
+                        >
+                          Ko'rish
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
         </div>
       )}
 
@@ -669,6 +886,10 @@ Jami buyurtmalar: ${orders.length} ta
                           src={p.image}
                           alt={title}
                           className="w-12 h-12 object-contain rounded-xl bg-gray-50 dark:bg-gray-800 p-1 flex-shrink-0"
+                          onError={(e) => {
+                            e.currentTarget.onerror = null;
+                            e.currentTarget.src = "https://images.unsplash.com/photo-1580910051074-3eb694886505?w=600&auto=format&fit=crop&q=80";
+                          }}
                         />
                         <div className="max-w-xs">
                           <p className="font-semibold text-gray-900 dark:text-white line-clamp-1">{title}</p>
@@ -785,16 +1006,27 @@ Jami buyurtmalar: ${orders.length} ta
               ))}
             </div>
 
-            {/* Search by Order ID or Phone */}
-            <div className="relative w-full sm:w-64">
-              <input
-                type="text"
-                value={orderSearch}
-                onChange={(e) => setOrderSearch(e.target.value)}
-                placeholder="ID, ism yoki telefon..."
-                className="w-full pl-9 pr-4 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-xs focus:outline-none focus:border-amber-400"
-              />
-              <Search className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
+            {/* Search by Order ID or Phone & CSV Export */}
+            <div className="flex items-center gap-2 w-full sm:w-auto">
+              <div className="relative flex-1 sm:w-64">
+                <input
+                  type="text"
+                  value={orderSearch}
+                  onChange={(e) => setOrderSearch(e.target.value)}
+                  placeholder="ID, ism yoki telefon..."
+                  className="w-full pl-9 pr-4 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-xs focus:outline-none focus:border-amber-400"
+                />
+                <Search className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              </div>
+
+              <button
+                onClick={handleExportOrdersCSV}
+                className="px-3.5 py-2 bg-primary hover:bg-primary-hover text-black font-extrabold text-xs rounded-xl flex items-center gap-1.5 shadow-sm transition-all whitespace-nowrap active:scale-95"
+                title="Barcha buyurtmalarni CSV fayl sifatida yuklab olish"
+              >
+                <Download className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">CSV yuklash</span>
+              </button>
             </div>
           </div>
 
@@ -1144,7 +1376,15 @@ Jami buyurtmalar: ${orders.length} ta
                 return (
                   <div key={idx} className="flex items-center justify-between p-3 rounded-xl bg-gray-50 dark:bg-gray-900 border border-gray-100 dark:border-gray-800 text-xs">
                     <div className="flex items-center gap-3">
-                      <img src={it.image} alt={title} className="w-10 h-10 object-contain rounded-lg" />
+                      <img 
+                        src={it.image || "https://images.unsplash.com/photo-1580910051074-3eb694886505?w=600&auto=format&fit=crop&q=80"} 
+                        alt={title} 
+                        className="w-10 h-10 object-contain rounded-lg"
+                        onError={(e) => {
+                          e.currentTarget.onerror = null;
+                          e.currentTarget.src = "https://images.unsplash.com/photo-1580910051074-3eb694886505?w=600&auto=format&fit=crop&q=80";
+                        }}
+                      />
                       <div>
                         <p className="font-bold text-gray-900 dark:text-white">{title}</p>
                         <p className="text-gray-400">{it.quantity} x {formatPrice(it.price, lang)}</p>

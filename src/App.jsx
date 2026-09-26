@@ -19,6 +19,8 @@ import { AdminPage } from './pages/AdminPage';
 import { LoginPage } from './pages/LoginPage';
 import { ProfilePage } from './pages/ProfilePage';
 
+import { PageTransition } from './components/common/PageTransition';
+
 function App() {
   return (
     <AppProvider>
@@ -34,21 +36,23 @@ function App() {
           {/* 1-Click Quick Buy Modal */}
           <QuickBuyModal />
 
-          {/* Main Content View */}
+          {/* Main Content View with Smooth Page Transition */}
           <main className="flex-1">
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/catalog" element={<CatalogPage />} />
-              <Route path="/product/:id" element={<ProductDetailPage />} />
-              <Route path="/cart" element={<CartPage />} />
-              <Route path="/favorites" element={<FavoritesPage />} />
-              <Route path="/compare" element={<ComparePage />} />
-              <Route path="/stores" element={<StoresPage />} />
-              <Route path="/admin" element={<AdminPage />} />
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/profile" element={<ProfilePage />} />
-              <Route path="*" element={<HomePage />} />
-            </Routes>
+            <PageTransition>
+              <Routes>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/catalog" element={<CatalogPage />} />
+                <Route path="/product/:id" element={<ProductDetailPage />} />
+                <Route path="/cart" element={<CartPage />} />
+                <Route path="/favorites" element={<FavoritesPage />} />
+                <Route path="/compare" element={<ComparePage />} />
+                <Route path="/stores" element={<StoresPage />} />
+                <Route path="/admin" element={<AdminPage />} />
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/profile" element={<ProfilePage />} />
+                <Route path="*" element={<HomePage />} />
+              </Routes>
+            </PageTransition>
           </main>
 
           {/* Toast Alerts */}
