@@ -6,7 +6,8 @@ import {
   getTelegramConfig,
   saveTelegramConfig,
   sendTelegramMessage,
-  formatOrderForTelegram
+  formatOrderForTelegram,
+  fetchBotUpdates
 } from '../utils/telegram';
 import {
   Package,
@@ -94,6 +95,7 @@ export const AdminPage = () => {
   // Telegram Config State
   const [tgConfig, setTgConfig] = useState(getTelegramConfig());
   const [testSending, setTestSending] = useState(false);
+  const [detectingChat, setDetectingChat] = useState(false);
 
   // Analytics Metrics
   const totalRevenue = orders.reduce((sum, o) => sum + (o.totalAmount || 0), 0);
@@ -266,6 +268,24 @@ export const AdminPage = () => {
     e.preventDefault();
     saveTelegramConfig(tgConfig);
     showToast("Telegram sozlamalari saqlandi!");
+  };
+
+  // Auto-detect Chat ID
+  const handleAutoDetectChatId = async () => {
+    setDetectingChat(true);
+    const res = await fetchBotUpdates(tgConfig.botToken);
+    setDetectingChat(false);
+
+    if (res.success && res.chatId) {
+      const updated = { ...tgConfig, chatId: res.chatId };
+      setTgConfig(updated);
+      saveTelegramConfig(updated);
+      showToast(`Muvaffaqiyatli aniqlandi: ${res.chatTitle} (ID: ${res.chatId})`, 'success');
+      // Send welcome test
+      await sendTelegramMessage(`✅ <b>Texnomart do'koni boti ulandi!</b>\n\nChat: <b>${res.chatTitle}</b>\nChat ID: <code>${res.chatId}</code>\nEndi yangi buyurtmalar shu yerga keladi! 🛍`, updated);
+    } else {
+      showToast(res.message || "Chat ID aniqlanmadi. Avval Telegramda @orifxojabot ga /start deb yozing!", 'info');
+    }
   };
 
   // Send Test Telegram Message
@@ -973,6 +993,31 @@ Jami buyurtmalar: ${orders.length} ta
             </div>
           </div>
 
+          {/* Bot Connection Card */}
+          <div className="p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/40 space-y-2">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span className="font-bold text-xs text-gray-900 dark:text-white">Ulanayotgan Bot:</span>
+                <span className="font-mono text-xs font-black px-2 py-0.5 rounded-lg bg-amber-400 text-black">
+                  @{tgConfig.botUsername || 'orifxojabot'}
+                </span>
+              </div>
+              <a
+                href={`https://t.me/${tgConfig.botUsername || 'orifxojabot'}`}
+                target="_blank"
+                rel="noreferrer"
+                className="text-xs text-amber-700 dark:text-amber-400 font-bold hover:underline flex items-center gap-1"
+              >
+                <span>Telegramda ochish</span>
+                <ExternalLink className="w-3.5 h-3.5" />
+              </a>
+            </div>
+            <p className="text-xs text-gray-600 dark:text-gray-300 leading-relaxed">
+              1. Telegramda <a href={`https://t.me/${tgConfig.botUsername || 'orifxojabot'}`} target="_blank" rel="noreferrer" className="font-bold underline text-amber-600">@{tgConfig.botUsername || 'orifxojabot'}</a> ga kiring va <b>/start</b> deb yozing.<br />
+              2. So'ng quyidagi <b>"Chat ID ni avtomatik aniqlash"</b> tugmasini bosing — bot avtomatik ulanadi!
+            </p>
+          </div>
+
           <form onSubmit={handleSaveTelegramConfig} className="space-y-4">
             <div>
               <label className="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1">
@@ -991,9 +1036,20 @@ Jami buyurtmalar: ${orders.length} ta
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1">
-                Telegram Chat ID (yoki Guruh ID)
-              </label>
+              <div className="flex items-center justify-between mb-1">
+                <label className="block text-xs font-bold text-gray-700 dark:text-gray-300">
+                  Telegram Chat ID (yoki Guruh ID)
+                </label>
+                <button
+                  type="button"
+                  onClick={handleAutoDetectChatId}
+                  disabled={detectingChat}
+                  className="text-xs font-bold text-amber-600 dark:text-amber-400 hover:underline flex items-center gap-1"
+                >
+                  <Bot className="w-3.5 h-3.5" />
+                  <span>{detectingChat ? "Qidirilmoqda..." : "⚡️ Chat ID ni avtomatik aniqlash"}</span>
+                </button>
+              </div>
               <input
                 type="text"
                 value={tgConfig.chatId}
@@ -1002,12 +1058,12 @@ Jami buyurtmalar: ${orders.length} ta
                 className="w-full p-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-xs font-mono focus:outline-none focus:border-amber-400"
               />
               <span className="text-[11px] text-gray-400 block mt-1">
-                Sizning shaxsiy Chat ID yoki Telegram guruhingiz ID si (masalan: @userinfobot orqali olish mumkin).
+                Sizning shaxsiy Chat ID yoki Telegram guruhingiz ID si (yuqoridagi tugma orqali avtomatik topsa bo'ladi).
               </span>
             </div>
 
             {/* Buttons */}
-            <div className="pt-4 border-t border-gray-100 dark:border-gray-800 flex items-center gap-3">
+            <div className="pt-4 border-t border-gray-100 dark:border-gray-800 flex flex-wrap items-center gap-3">
               <button
                 type="submit"
                 className="px-6 py-3 bg-primary hover:bg-primary-hover text-black font-extrabold rounded-xl text-xs flex items-center gap-2 shadow-md transition-all active:scale-95"
