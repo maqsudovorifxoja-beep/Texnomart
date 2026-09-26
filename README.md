@@ -86,3 +86,4 @@ Natija `dist/` papkasida hosil bo'ladi va Vercel platformasiga to'g'ridan-to'g'r
 3. Saytdagi **Admin Panel** (`/admin`) -> **Telegram Bot** bo'limiga kiring va ma'lumotlarni saqlang.
 4. "Test xabar jo'natish" tugmasini bosing!
 # eeee
+# eeee
