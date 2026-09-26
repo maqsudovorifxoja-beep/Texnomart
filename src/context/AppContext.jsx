@@ -46,7 +46,7 @@ export const AppProvider = ({ children }) => {
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        if (Array.isArray(parsed) && parsed.length >= initialProducts.length) return parsed;
       } catch (e) {
         console.error("Error reading saved products", e);
       }
@@ -83,6 +83,12 @@ export const AppProvider = ({ children }) => {
     setCart(prev => prev.filter(item => item.id !== id));
     setFavorites(prev => prev.filter(fId => fId !== id));
     showToast(lang === 'uz' ? "Mahsulot o'chirildi!" : "Товар удален!");
+  };
+
+  const resetProductsToDefault = () => {
+    setProducts(initialProducts);
+    localStorage.setItem('texnomart_products', JSON.stringify(initialProducts));
+    showToast(lang === 'uz' ? "Barcha mahsulotlar to'liq yangilandi!" : "Все товары полностью обновлены!", 'info');
   };
 
   // 4. Cart State
@@ -316,6 +322,7 @@ export const AppProvider = ({ children }) => {
         addProduct,
         updateProduct,
         deleteProduct,
+        resetProductsToDefault,
         cart,
         addToCart,
         removeFromCart,

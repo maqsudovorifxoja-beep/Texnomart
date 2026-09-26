@@ -22,7 +22,8 @@ import {
   X,
   Search,
   Bot,
-  ExternalLink
+  ExternalLink,
+  RotateCcw
 } from 'lucide-react';
 
 export const AdminPage = () => {
@@ -31,6 +32,7 @@ export const AdminPage = () => {
     addProduct,
     updateProduct,
     deleteProduct,
+    resetProductsToDefault,
     orders,
     updateOrderStatus,
     t,
@@ -314,13 +316,24 @@ Status: Ishlamoqda ✅
               <Search className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
             </div>
 
-            <button
-              onClick={handleOpenAddModal}
-              className="px-5 py-2.5 bg-primary hover:bg-primary-hover text-black font-extrabold rounded-xl text-xs flex items-center justify-center gap-2 shadow-sm transition-all active:scale-95"
-            >
-              <Plus className="w-4 h-4 stroke-[2.5]" />
-              <span>{t('addProduct')}</span>
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={resetProductsToDefault}
+                className="px-4 py-2.5 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 transition-all"
+                title="Barcha boshlang'ich tovarlarni qayta tiklash"
+              >
+                <RotateCcw className="w-3.5 h-3.5" />
+                <span>Katalog to'plamini yangilash</span>
+              </button>
+
+              <button
+                onClick={handleOpenAddModal}
+                className="px-5 py-2.5 bg-primary hover:bg-primary-hover text-black font-extrabold rounded-xl text-xs flex items-center justify-center gap-2 shadow-sm transition-all active:scale-95"
+              >
+                <Plus className="w-4 h-4 stroke-[2.5]" />
+                <span>{t('addProduct')}</span>
+              </button>
+            </div>
           </div>
 
           {/* Table */}
