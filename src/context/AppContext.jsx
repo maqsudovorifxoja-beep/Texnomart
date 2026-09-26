@@ -91,6 +91,35 @@ export const AppProvider = ({ children }) => {
     showToast(lang === 'uz' ? "Barcha mahsulotlar to'liq yangilandi!" : "Все товары полностью обновлены!", 'info');
   };
 
+  const toggleProductStock = (id) => {
+    setProducts(prev => prev.map(p => {
+      if (p.id === id) {
+        const nextState = !p.inStock;
+        showToast(nextState ? (lang === 'uz' ? "Omborda mavjud qilindi!" : "Отмечен в наличии!") : (lang === 'uz' ? "Omborda tugadi qilindi!" : "Отмечен нет в наличии!"), 'info');
+        return { ...p, inStock: nextState };
+      }
+      return p;
+    }));
+  };
+
+  const duplicateProduct = (id) => {
+    const existing = products.find(p => p.id === id);
+    if (!existing) return;
+    const duplicated = {
+      ...existing,
+      id: Date.now(),
+      title: typeof existing.title === 'object'
+        ? {
+            uz: `${existing.title.uz} (Nusxa)`,
+            ru: `${existing.title.ru} (Копия)`,
+            en: `${existing.title.en} (Copy)`,
+          }
+        : `${existing.title} (Nusxa)`
+    };
+    setProducts(prev => [duplicated, ...prev]);
+    showToast(lang === 'uz' ? "Mahsulotdan nusxa olindi!" : "Создана копия товара!", 'success');
+  };
+
   // 4. Cart State
   const [cart, setCart] = useState(() => {
     const saved = localStorage.getItem('texnomart_cart');
@@ -277,6 +306,11 @@ export const AppProvider = ({ children }) => {
     showToast(lang === 'uz' ? `Buyurtma #${orderId} holati o'zgartirildi!` : `Статус заказа #${orderId} изменен!`);
   };
 
+  const deleteOrder = (orderId) => {
+    setOrders(prev => prev.filter(o => o.id !== orderId));
+    showToast(lang === 'uz' ? `Buyurtma #${orderId} o'chirildi!` : `Заказ #${orderId} удален!`, 'info');
+  };
+
   // 8. Auth State
   const [user, setUser] = useState(() => {
     const saved = localStorage.getItem('texnomart_user');
@@ -323,6 +357,8 @@ export const AppProvider = ({ children }) => {
         updateProduct,
         deleteProduct,
         resetProductsToDefault,
+        toggleProductStock,
+        duplicateProduct,
         cart,
         addToCart,
         removeFromCart,
@@ -342,6 +378,7 @@ export const AppProvider = ({ children }) => {
         orders,
         addOrder,
         updateOrderStatus,
+        deleteOrder,
         user,
         login,
         logout,
