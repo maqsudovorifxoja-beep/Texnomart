@@ -98,3 +98,144 @@
   animation: routeProgressBar 0.45s ease-out forwards;
 }
 
+/* ==========================================================
+   Admin Panel Comprehensive Light & Dark Mode Support
+   ========================================================== */
+html:not(.dark) .admin-theme {
+  background-color: #f8fafc !important;
+  color: #0f172a !important;
+}
+
+/* Page background containers */
+html:not(.dark) .admin-theme .bg-\[\#0a0d14\],
+html:not(.dark) .admin-theme .bg-\[\#07090e\] {
+  background-color: #f8fafc !important;
+}
+
+/* Sidebar & Header */
+html:not(.dark) .admin-theme .bg-\[\#0d111a\],
+html:not(.dark) .admin-theme .bg-\[\#0d111a\]\/80 {
+  background-color: #ffffff !important;
+  border-color: #e2e8f0 !important;
+}
+
+/* Cards, Modals, Tables, Dropdowns */
+html:not(.dark) .admin-theme .bg-\[\#0f141f\],
+html:not(.dark) .admin-theme .bg-\[\#0f141f\]\/95,
+html:not(.dark) .admin-theme .bg-\[\#121722\] {
+  background-color: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
+}
+
+/* Sub-containers & Secondary Cards */
+html:not(.dark) .admin-theme .bg-\[\#0b0e17\] {
+  background-color: #f1f5f9 !important;
+  border-color: #e2e8f0 !important;
+}
+
+/* Slate background replacements in light mode */
+html:not(.dark) .admin-theme .bg-slate-900,
+html:not(.dark) .admin-theme .bg-slate-900\/90,
+html:not(.dark) .admin-theme .bg-slate-900\/80,
+html:not(.dark) .admin-theme .bg-slate-900\/60 {
+  background-color: #f8fafc !important;
+  border-color: #e2e8f0 !important;
+}
+
+html:not(.dark) .admin-theme .bg-slate-800,
+html:not(.dark) .admin-theme .bg-slate-800\/80,
+html:not(.dark) .admin-theme .bg-slate-800\/60,
+html:not(.dark) .admin-theme .bg-slate-800\/50,
+html:not(.dark) .admin-theme .bg-slate-800\/40 {
+  background-color: #f1f5f9 !important;
+  border-color: #e2e8f0 !important;
+}
+
+html:not(.dark) .admin-theme .hover\:bg-slate-800:hover,
+html:not(.dark) .admin-theme .hover\:bg-slate-800\/50:hover,
+html:not(.dark) .admin-theme .hover\:bg-slate-900:hover {
+  background-color: #e2e8f0 !important;
+}
+
+/* Borders */
+html:not(.dark) .admin-theme .border-slate-800,
+html:not(.dark) .admin-theme .border-slate-800\/80,
+html:not(.dark) .admin-theme .border-slate-800\/60,
+html:not(.dark) .admin-theme .border-slate-800\/50 {
+  border-color: #e2e8f0 !important;
+}
+
+html:not(.dark) .admin-theme .border-slate-700,
+html:not(.dark) .admin-theme .border-slate-700\/80,
+html:not(.dark) .admin-theme .border-slate-700\/60 {
+  border-color: #cbd5e1 !important;
+}
+
+/* Text Colors */
+html:not(.dark) .admin-theme .text-white {
+  color: #0f172a !important;
+}
+
+html:not(.dark) .admin-theme .text-slate-100,
+html:not(.dark) .admin-theme .text-slate-200,
+html:not(.dark) .admin-theme .text-slate-300 {
+  color: #334155 !important;
+}
+
+html:not(.dark) .admin-theme .text-slate-400 {
+  color: #64748b !important;
+}
+
+html:not(.dark) .admin-theme .text-slate-500 {
+  color: #94a3b8 !important;
+}
+
+/* Form Controls (Inputs, Selects, Textareas) */
+html:not(.dark) .admin-theme input,
+html:not(.dark) .admin-theme select,
+html:not(.dark) .admin-theme textarea {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  border-color: #cbd5e1 !important;
+}
+
+html:not(.dark) .admin-theme input::placeholder,
+html:not(.dark) .admin-theme textarea::placeholder {
+  color: #94a3b8 !important;
+}
+
+/* Table styling in light mode */
+html:not(.dark) .admin-theme thead th,
+html:not(.dark) .admin-theme thead tr {
+  background-color: #f1f5f9 !important;
+  color: #334155 !important;
+  border-color: #e2e8f0 !important;
+}
+
+html:not(.dark) .admin-theme tbody tr {
+  border-color: #f1f5f9 !important;
+}
+
+html:not(.dark) .admin-theme tbody tr:hover {
+  background-color: #f8fafc !important;
+}
+
+/* Ensure vibrant CTA buttons keep black text on yellow */
+html:not(.dark) .admin-theme .bg-amber-400,
+html:not(.dark) .admin-theme .bg-amber-400 * {
+  color: #000000 !important;
+}
+
+/* Theme toggle button specific light mode styling */
+html:not(.dark) .admin-theme button[title*="rejim"] {
+  background-color: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+html:not(.dark) .admin-theme button[title*="rejim"] .bg-slate-800 {
+  background-color: #fef3c7 !important;
+  color: #d97706 !important;
+}
+

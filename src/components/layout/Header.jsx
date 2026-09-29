@@ -12,7 +12,6 @@ import {
   Moon,
   MapPin,
   PhoneCall,
-  ShieldCheck,
   ChevronDown,
   X,
   LayoutDashboard,
@@ -90,9 +89,9 @@ export const Header = () => {
     <header className="sticky top-0 z-40 w-full bg-white dark:bg-[#141414] border-b border-gray-100 dark:border-gray-800 transition-colors shadow-xs">
       
       {/* 1. Top Utility Header (City, Hotlines, Stores, Language, Theme) */}
-      <div className="bg-[#f7f7f7] dark:bg-[#0d0d0d] text-xs text-gray-600 dark:text-gray-400 border-b border-gray-200/70 dark:border-gray-800/80 hidden md:block">
-        <div className="max-w-7xl mx-auto px-4 py-1.5 flex items-center justify-between">
-          <div className="flex items-center gap-6">
+      <div className="bg-[#f7f7f7] dark:bg-[#0d0d0d] text-xs text-gray-600 dark:text-gray-400 border-b border-gray-200/70 dark:border-gray-800/80">
+        <div className="max-w-7xl mx-auto px-4 py-1.5 flex items-center justify-between gap-2">
+          <div className="flex items-center gap-4 sm:gap-6">
             {/* City Selector */}
             <button
               onClick={() => setIsCityModalOpen(true)}
@@ -104,68 +103,62 @@ export const Header = () => {
             </button>
 
             {/* Quick Links */}
-            <Link to="/stores" className="hover:text-amber-500 transition-colors font-medium">
-              {t('ourStores')}
-            </Link>
-            <Link to="/deals" className="hover:text-amber-500 transition-colors font-semibold text-amber-600 dark:text-amber-400 flex items-center gap-1">
-              <span>🔥 Aksiyalar</span>
-            </Link>
-            <Link to="/installments" className="hover:text-amber-500 transition-colors font-medium flex items-center gap-1">
-              <CreditCard className="w-3 h-3 text-amber-500" />
-              <span>{t('buyInInstallment')} 0-0-24</span>
-            </Link>
-            <Link
-              to="/admin"
-              className="px-2.5 py-1 bg-gradient-to-r from-amber-400 to-yellow-400 hover:from-amber-300 hover:to-yellow-300 text-black font-black rounded-lg text-[11px] shadow-sm flex items-center gap-1.5 transition-all hover:scale-105 active:scale-95"
-            >
-              <ShieldCheck className="w-3.5 h-3.5 stroke-[2.5]" />
-              <span>Admin Panel</span>
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-ping" />
-            </Link>
+            <div className="hidden md:flex items-center gap-4 text-xs">
+              <Link to="/stores" className="hover:text-amber-500 transition-colors font-medium">
+                {t('ourStores')}
+              </Link>
+              <Link to="/deals" className="hover:text-amber-500 transition-colors font-semibold text-amber-600 dark:text-amber-400 flex items-center gap-1">
+                <span>🔥 Aksiyalar</span>
+              </Link>
+              <Link to="/installments" className="hover:text-amber-500 transition-colors font-medium flex items-center gap-1">
+                <CreditCard className="w-3 h-3 text-amber-500" />
+                <span>{t('buyInInstallment')} 0-0-24</span>
+              </Link>
+            </div>
           </div>
 
-          <div className="flex items-center gap-5">
+          <div className="flex items-center gap-2 sm:gap-4">
             {/* Support Phone */}
-            <a href="tel:+998712099944" className="flex items-center gap-1.5 font-bold text-gray-900 dark:text-white hover:text-amber-500 transition-colors">
+            <a href="tel:+998712099944" className="hidden lg:flex items-center gap-1.5 font-bold text-gray-900 dark:text-white hover:text-amber-500 transition-colors">
               <PhoneCall className="w-3.5 h-3.5 text-amber-500" />
               <span>+998 (71) 209-99-44</span>
             </a>
 
-            {/* Language Switcher (Enlarged & Flag Badges) */}
-            <div className="flex items-center bg-gray-200/90 dark:bg-gray-800 p-1 rounded-2xl border border-gray-300/80 dark:border-gray-700 shadow-inner">
+            {/* Language Switcher */}
+            <div className="flex items-center bg-gray-200/90 dark:bg-gray-800 p-0.5 sm:p-1 rounded-2xl border border-gray-300/80 dark:border-gray-700 shadow-inner">
               {[
-                { code: 'uz', flag: "🇺🇿", label: "O'zbek" },
-                { code: 'ru', flag: "🇷🇺", label: "Русский" },
-                { code: 'en', flag: "🇬🇧", label: "English" },
+                { code: 'uz', flag: "🇺🇿", label: "O'z" },
+                { code: 'ru', flag: "🇷🇺", label: "Ру" },
+                { code: 'en', flag: "🇬🇧", label: "En" },
               ].map((item) => (
                 <button
                   key={item.code}
                   onClick={() => changeLang(item.code)}
-                  className={`px-3 py-1.5 rounded-xl transition-all flex items-center gap-1.5 text-xs font-black cursor-pointer ${
+                  className={`px-2 py-1 sm:px-2.5 sm:py-1 rounded-xl transition-all flex items-center gap-1 text-[11px] sm:text-xs font-black cursor-pointer ${
                     lang === item.code
                       ? 'bg-amber-400 text-black font-black shadow-md scale-105'
                       : 'text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white hover:bg-gray-300/60 dark:hover:bg-gray-700/60'
                   }`}
                 >
-                  <span className="text-sm">{item.flag}</span>
-                  <span>{item.label}</span>
+                  <span>{item.flag}</span>
+                  <span className="hidden sm:inline">{item.label}</span>
                 </button>
               ))}
             </div>
 
-            {/* Dark / Light Mode Toggle (Enlarged Pill with Icon & Label) */}
+            {/* Dark / Light Mode Toggle */}
             <button
               onClick={toggleTheme}
               aria-label="Toggle dark mode"
-              className="flex items-center gap-2 px-3.5 py-1.5 rounded-2xl bg-gray-200/90 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700 border border-gray-300/80 dark:border-gray-700 text-gray-900 dark:text-white transition-all shadow-xs active:scale-95 group font-black text-xs cursor-pointer"
+              className="flex items-center gap-1.5 p-1.5 sm:px-3 sm:py-1.5 rounded-2xl bg-gray-200/90 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700 border border-gray-300/80 dark:border-gray-700 text-gray-900 dark:text-white transition-all shadow-xs active:scale-95 group font-black text-xs cursor-pointer"
               title={isDark ? "Kunduzgi rejimga o'tish" : "Tungi rejimga o'tish"}
             >
-              <div className={`p-1.5 rounded-xl transition-transform group-hover:rotate-12 ${
+              <div className={`p-1 rounded-xl transition-transform group-hover:rotate-12 ${
                 isDark ? 'bg-amber-400 text-black shadow-sm' : 'bg-amber-100 text-amber-600'
               }`}>
-                {isDark ? <Moon className="w-4 h-4 fill-current" /> : <Sun className="w-4 h-4 fill-current" />}
+                {isDark ? <Moon className="w-3.5 h-3.5 fill-current" /> : <Sun className="w-3.5 h-3.5 fill-current" />}
               </div>
-              <span className="font-extrabold tracking-wide">
+              <span className="font-extrabold tracking-wide hidden sm:inline text-[11px]">
                 {isDark ? "Tungi" : "Kunduzgi"}
               </span>
             </button>
@@ -191,18 +184,18 @@ export const Header = () => {
         {/* Big Yellow Catalog Button */}
         <button
           onClick={() => setIsCatalogOpen(!isCatalogOpen)}
-          className="flex items-center gap-2.5 px-4 sm:px-6 py-3 rounded-2xl bg-primary hover:bg-primary-hover text-black font-black text-xs sm:text-sm transition-all shadow-md shadow-amber-500/20 active:scale-95 flex-shrink-0"
+          className="flex items-center gap-2 px-3 sm:px-6 py-2.5 sm:py-3 rounded-2xl bg-primary hover:bg-primary-hover text-black font-black text-xs sm:text-sm transition-all shadow-md shadow-amber-500/20 active:scale-95 flex-shrink-0"
         >
           {isCatalogOpen ? (
             <X className="w-5 h-5 stroke-[2.5]" />
           ) : (
             <Menu className="w-5 h-5 stroke-[3]" />
           )}
-          <span>{t('catalog')}</span>
+          <span className="hidden sm:inline">{t('catalog')}</span>
         </button>
 
         {/* Live Search Input with Dropdown & Popular Chips */}
-        <div ref={searchRef} className="relative flex-1 max-w-2xl">
+        <div ref={searchRef} className="relative flex-1 min-w-[150px] sm:min-w-[280px] max-w-2xl">
           <form onSubmit={handleSearchSubmit} className="relative w-full">
             <input
               type="text"
@@ -306,7 +299,7 @@ export const Header = () => {
           {/* Compare Button */}
           <Link
             to="/compare"
-            className="relative flex flex-col items-center justify-center p-2 rounded-2xl text-gray-700 dark:text-gray-300 hover:text-amber-500 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+            className="relative hidden lg:flex flex-col items-center justify-center p-2 rounded-2xl text-gray-700 dark:text-gray-300 hover:text-amber-500 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
             title="Taqqoslash"
           >
             <div className="relative">
@@ -323,7 +316,7 @@ export const Header = () => {
           {/* Favorites Button */}
           <Link
             to="/favorites"
-            className="relative flex flex-col items-center justify-center p-2 rounded-2xl text-gray-700 dark:text-gray-300 hover:text-amber-500 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+            className="relative hidden md:flex flex-col items-center justify-center p-2 rounded-2xl text-gray-700 dark:text-gray-300 hover:text-amber-500 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
             title={t('favorites')}
           >
             <div className="relative">
@@ -429,60 +422,6 @@ export const Header = () => {
               </Link>
             )}
           </div>
-
-          {/* 🌟 PROMINENT ADMIN PANEL BUTTON RIGHT NEXT TO KIRISH! 🌟 */}
-          <Link
-            to="/admin"
-            className="flex items-center gap-1.5 px-3 py-2 sm:px-4 sm:py-2.5 rounded-2xl bg-amber-400 hover:bg-amber-300 text-black font-black text-xs transition-all shadow-md shadow-amber-400/25 active:scale-95 flex-shrink-0"
-            title="Admin Boshqaruv Paneliga o'tish"
-          >
-            <ShieldCheck className="w-4 h-4 stroke-[2.5]" />
-            <span className="hidden sm:inline">Admin Panel</span>
-            <span className="sm:hidden">Admin</span>
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-700 animate-ping hidden md:inline-block" />
-          </Link>
-
-          {/* Main Bar Language Switcher (Always accessible) */}
-          <div className="flex items-center bg-gray-100 dark:bg-gray-800 p-1 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-inner flex-shrink-0">
-            {[
-              { code: 'uz', flag: "🇺🇿", label: "O'z" },
-              { code: 'ru', flag: "🇷🇺", label: "Ру" },
-              { code: 'en', flag: "🇬🇧", label: "En" },
-            ].map((item) => (
-              <button
-                key={item.code}
-                onClick={() => changeLang(item.code)}
-                className={`px-2 py-1 sm:px-2.5 sm:py-1 rounded-xl transition-all flex items-center gap-1 text-xs font-black cursor-pointer ${
-                  lang === item.code
-                    ? 'bg-amber-400 text-black shadow-xs font-black scale-105'
-                    : 'text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white'
-                }`}
-                title={item.label}
-              >
-                <span>{item.flag}</span>
-                <span className="hidden xl:inline">{item.label}</span>
-              </button>
-            ))}
-          </div>
-
-          {/* Main Bar Dark / Light Mode Toggle Button */}
-          <button
-            onClick={toggleTheme}
-            aria-label="Toggle dark mode"
-            className="flex items-center gap-1.5 p-2 sm:px-3 sm:py-2 rounded-2xl bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700 text-gray-800 dark:text-gray-200 transition-all shadow-xs active:scale-95 group font-black text-xs cursor-pointer flex-shrink-0"
-            title={isDark ? "Kunduzgi rejimga o'tish" : "Tungi rejimga o'tish"}
-          >
-            <div className={`p-1 rounded-lg transition-transform group-hover:rotate-12 ${
-              isDark ? 'bg-amber-400 text-black shadow-sm' : 'bg-amber-100 text-amber-600'
-            }`}>
-              {isDark ? <Moon className="w-4 h-4 fill-current" /> : <Sun className="w-4 h-4 fill-current" />}
-            </div>
-            <span className="font-extrabold hidden 2xl:inline text-[11px]">
-              {isDark ? "Tungi" : "Kunduzgi"}
-            </span>
-          </button>
-
-
         </div>
       </div>
 

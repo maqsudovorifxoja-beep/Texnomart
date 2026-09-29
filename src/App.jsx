@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
-import { AppProvider } from './context/AppContext';
+import { AppProvider, useApp } from './context/AppContext';
 import { Header } from './components/layout/Header';
 import { Footer } from './components/layout/Footer';
 import { CatalogModal } from './components/layout/CatalogModal';
@@ -28,10 +28,11 @@ import { PageTransition } from './components/common/PageTransition';
 function AppContent() {
   const location = useLocation();
   const isAdmin = location.pathname.startsWith('/admin');
+  const { isDark } = useApp();
 
   if (isAdmin) {
     return (
-      <div className="min-h-screen bg-[#0d1117] text-slate-100 antialiased font-sans">
+      <div className={`min-h-screen ${isDark ? 'dark' : ''} admin-theme bg-slate-100 dark:bg-[#0d1117] text-slate-900 dark:text-slate-100 antialiased font-sans transition-colors duration-200`}>
         <Routes>
           <Route path="/admin/*" element={<AdminPage />} />
           <Route path="/admin" element={<AdminPage />} />
