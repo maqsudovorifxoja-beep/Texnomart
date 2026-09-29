@@ -87,3 +87,4 @@ Natija `dist/` papkasida hosil bo'ladi va Vercel platformasiga to'g'ridan-to'g'r
 4. "Test xabar jo'natish" tugmasini bosing!
 # eeee
 # eeee
+# cola
